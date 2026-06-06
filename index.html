@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Portal — Grades</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --royal: #1a3a6b;
+  --royal-mid: #2550a0;
+  --royal-light: #3b6fc9;
+  --royal-pale: #dce8f8;
+  --white: #ffffff;
+  --off-white: #f7f9fc;
+  --black: #111111;
+  --grey: #6b7280;
+  --border: #dde3ec;
+  --tulip-pink: #e8b4b8;
+  --tulip-rose: #c97e85;
+  --error: #c0392b;
+  --success: #2ecc71;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'DM Sans', sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-sans); background: var(--off-white); color: var(--black); min-height: 100vh; overflow-x: hidden; }
+
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); transform: translateY(12px); overflow-y: auto; z-index: 1; }
+.screen.active { opacity: 1; pointer-events: all; transform: translateY(0); z-index: 2; }
+.screen.exit { opacity: 0; transform: translateY(-12px); z-index: 1; pointer-events: none; }
+
+/* ── SCREEN 1 — GRADES ── */
+#screen-grades { background: var(--off-white); align-items: stretch; }
+.portal-header { background: var(--royal); color: var(--white); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.portal-header .logo { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; letter-spacing: 0.04em; }
+.portal-header .user-info { font-size: 0.78rem; opacity: 0.8; }
+.portal-nav { background: #14305a; padding: 0 24px; display: flex; gap: 2px; flex-shrink: 0; }
+.portal-nav a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.78rem; padding: 10px 14px; cursor: default; transition: color 0.2s, background 0.2s; border-bottom: 2px solid transparent; }
+.portal-nav a.active-nav { color: var(--white); border-bottom-color: #7ab3f5; background: rgba(255,255,255,0.05); }
+.portal-body { max-width: 960px; width: 100%; margin: 28px auto; padding: 0 16px 60px; }
+.portal-section-title { font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--grey); margin-bottom: 6px; }
+.portal-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 24px; }
+.portal-card-header { background: var(--royal); color: var(--white); padding: 12px 18px; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em; display: flex; justify-content: space-between; align-items: center; }
+.grades-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.grades-table th { background: var(--royal); color: var(--white); padding: 11px 14px; text-align: center; font-weight: 500; font-size: 0.78rem; letter-spacing: 0.03em; border-right: 1px solid rgba(255,255,255,0.15); }
+.grades-table th:first-child { text-align: left; width: 130px; }
+.grades-table th:nth-child(2) { text-align: left; }
+.grades-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); color: #333; }
+.grades-table td:nth-child(3), .grades-table td:nth-child(4), .grades-table td:nth-child(5) { text-align: center; }
+.grades-table tr:last-child td { border-bottom: none; }
+.grades-table tr:hover td { background: #f0f6ff; }
+.grades-table .total-row td { font-weight: 600; background: var(--off-white); color: var(--black); }
+.portal-meta { display: flex; gap: 24px; flex-wrap: wrap; padding: 16px 18px; background: var(--off-white); border-top: 1px solid var(--border); font-size: 0.76rem; color: var(--grey); }
+.portal-meta span { font-weight: 600; color: var(--royal); }
+.countdown-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; background: var(--royal-pale); z-index: 999; }
+.countdown-bar-fill { height: 100%; background: var(--royal-light); width: 100%; transition: width 10s linear; }
+
+/* ── SCREEN 2 — PASSWORD (disguised as session timeout) ── */
+#screen-password { background: var(--off-white); align-items: stretch; }
+.pw-portal-header { background: var(--royal); color: var(--white); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.pw-portal-header .logo { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; letter-spacing: 0.04em; }
+.pw-portal-header .user-info { font-size: 0.78rem; opacity: 0.8; }
+.pw-portal-nav { background: #14305a; padding: 0 24px; display: flex; gap: 2px; flex-shrink: 0; }
+.pw-portal-nav a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.78rem; padding: 10px 14px; cursor: default; border-bottom: 2px solid transparent; }
+.pw-portal-nav a.active-nav { color: var(--white); border-bottom-color: #7ab3f5; background: rgba(255,255,255,0.05); }
+.pw-body { max-width: 480px; width: 100%; margin: 60px auto; padding: 0 16px; }
+.pw-session-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.pw-session-header { background: #fff8e1; border-bottom: 1px solid #ffe082; padding: 12px 18px; display: flex; align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 500; color: #7a5900; }
+.pw-session-body { padding: 28px 24px; }
+.pw-session-body h3 { font-size: 0.95rem; font-weight: 500; color: var(--black); margin-bottom: 6px; }
+.pw-session-body p { font-size: 0.8rem; color: var(--grey); margin-bottom: 22px; line-height: 1.6; }
+.pw-field-label { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--grey); margin-bottom: 6px; }
+.pw-input-wrap { position: relative; margin-bottom: 6px; }
+.pw-input { width: 100%; background: var(--off-white); border: 1px solid var(--border); border-radius: 5px; padding: 11px 40px 11px 13px; color: var(--black); font-family: var(--font-sans); font-size: 0.88rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.pw-input:focus { border-color: var(--royal-light); box-shadow: 0 0 0 3px rgba(59,111,201,0.12); }
+.pw-eye-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--grey); padding: 4px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
+.pw-eye-btn:hover { color: var(--royal); }
+.pw-eye-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* subtle hint row — looks like a helper text, only she will understand */
+.pw-hint-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 8px 10px;
+  background: #f0f6ff;
+  border: 1px solid #c8ddf7;
+  border-radius: 5px;
+  font-size: 0.73rem;
+  color: #3a5f9a;
+}
+.pw-hint-row .hint-icon { font-size: 0.85rem; flex-shrink: 0; }
+.pw-hint-row strong { font-weight: 600; }
+
+.pw-btn { width: 100%; background: var(--royal); border: none; border-radius: 5px; padding: 11px; color: var(--white); font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em; cursor: pointer; transition: background 0.2s; }
+.pw-btn:hover { background: var(--royal-mid); }
+.pw-error { margin-top: 10px; font-size: 0.76rem; color: var(--error); min-height: 18px; opacity: 0; transition: opacity 0.3s; }
+.pw-error.visible { opacity: 1; }
+.pw-session-footer { padding: 12px 24px; background: var(--off-white); border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--grey); }
+
+/* ── REVEAL TRANSITION ── */
+#reveal-overlay { position: fixed; inset: 0; z-index: 9998; pointer-events: none; display: flex; align-items: center; justify-content: center; background: transparent; }
+.reveal-ripple { position: absolute; width: 0; height: 0; border-radius: 50%; background: radial-gradient(circle, #e8b4b8 0%, #3b6fc9 45%, #1a3a6b 100%); transform: translate(-50%, -50%); top: 50%; left: 50%; opacity: 0; }
+.reveal-ripple.go { animation: rippleExpand 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.reveal-ripple.shrink { animation: rippleShrink 0.7s cubic-bezier(0.55, 0, 1, 0.45) forwards; }
+@keyframes rippleExpand { 0% { width:0;height:0;opacity:1; } 100% { width:300vmax;height:300vmax;opacity:1; } }
+@keyframes rippleShrink { 0% { width:300vmax;height:300vmax;opacity:1; } 100% { width:0;height:0;opacity:0; } }
+.reveal-tulip { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); font-size: 4rem; z-index: 1; opacity: 0; transition: none; }
+.reveal-tulip.pop { animation: tulipPop 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes tulipPop { 0%{transform:translate(-50%,-50%) scale(0) rotate(-20deg);opacity:0;} 40%{transform:translate(-50%,-50%) scale(1.4) rotate(8deg);opacity:1;} 70%{transform:translate(-50%,-50%) scale(0.9) rotate(-4deg);opacity:1;} 100%{transform:translate(-50%,-50%) scale(1.2) rotate(0deg);opacity:0;} }
+
+/* ── SCREEN 3 — MAIN SITE ── */
+#screen-main { background: var(--white); display: block; position: relative; overflow-y: auto; overflow-x: hidden; }
+.site-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 56px; }
+.site-nav .brand { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; color: var(--royal); font-style: italic; }
+.site-nav ul { list-style: none; display: flex; gap: 4px; }
+.site-nav ul a { color: var(--grey); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: color 0.2s, background 0.2s; }
+.site-nav ul a:hover { color: var(--royal); background: var(--royal-pale); }
+
+.hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 24px 60px; background: linear-gradient(180deg, #f0f6ff 0%, var(--white) 100%); position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(58,111,201,0.07) 0%, transparent 70%); pointer-events:none; }
+.hero-tulips { display: flex; gap: 16px; justify-content: center; margin-bottom: 32px; font-size: 2rem; animation: heroFloat 4s ease-in-out infinite; }
+@keyframes heroFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+.hero-sub { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--royal-light); margin-bottom: 14px; font-weight: 500; }
+.hero-title { font-family: var(--font-serif); font-size: clamp(2.6rem,7vw,5rem); font-weight: 300; color: var(--royal); line-height: 1.1; margin-bottom: 20px; }
+.hero-title em { font-style: italic; color: var(--royal-light); }
+.hero-date { font-size: 0.82rem; color: var(--grey); letter-spacing: 0.08em; margin-bottom: 28px; }
+.hero-message { max-width: 520px; font-size: 1.02rem; line-height: 1.75; color: #444; font-family: var(--font-serif); font-style: italic; font-weight: 300; }
+
+.section { padding: 80px 24px; max-width: 800px; margin: 0 auto; }
+.section-label { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--royal-light); margin-bottom: 10px; font-weight: 500; }
+.section-title { font-family: var(--font-serif); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 300; color: var(--royal); margin-bottom: 32px; line-height: 1.2; }
+.section-divider { width: 40px; height: 2px; background: var(--tulip-rose); margin-bottom: 32px; }
+
+/* QUIZ */
+#quiz { padding: 80px 24px; overflow: hidden; background: var(--white); }
+.quiz-inner { max-width: 640px; margin: 0 auto; }
+.quiz-progress { display: flex; gap: 4px; margin-bottom: 32px; flex-wrap: wrap; }
+.qp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+.qp-dot.done { background: var(--royal-light); }
+.qp-dot.correct { background: var(--success); transform: scale(1.2); }
+.qp-dot.wrong { background: var(--error); }
+.quiz-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 32px 28px; opacity: 1; transform: translateX(0); transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); box-shadow: 0 4px 18px rgba(0,0,0,0.02); }
+.quiz-card.exiting { opacity: 0; transform: translateX(-40px); }
+.quiz-card.entering { opacity: 0; transform: translateX(40px); transition: none; }
+.quiz-q-num { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--royal-light); margin-bottom: 10px; }
+.quiz-question { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; color: var(--royal); margin-bottom: 24px; line-height: 1.45; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt { background: var(--off-white); border: 1.5px solid var(--border); border-radius: 8px; padding: 13px 16px; text-align: left; font-family: var(--font-sans); font-size: 0.85rem; color: var(--black); cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--royal-light); background: var(--royal-pale); transform: translateX(3px); }
+.quiz-opt.correct-opt { border-color: var(--success); background: #eafaf1; color: #1a7a45; font-weight: 500; }
+.quiz-opt.wrong-opt { border-color: var(--error); background: #fdf0ef; color: var(--error); }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 16px; font-size: 0.85rem; font-family: var(--font-serif); font-style: italic; min-height: 22px; color: var(--royal); }
+.quiz-score { text-align: center; padding: 40px 20px; font-family: var(--font-serif); }
+.quiz-score .score-num { font-size: 4rem; color: var(--royal); line-height: 1; margin-bottom: 8px; }
+.quiz-score .score-msg { font-size: 1.2rem; font-style: italic; color: var(--grey); margin-bottom: 20px; }
+.quiz-restart { background: none; border: 1.5px solid var(--royal); border-radius: 8px; padding: 10px 24px; color: var(--royal); font-size: 0.82rem; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.quiz-restart:hover { background: var(--royal); color: white; }
+
+/* WORD SEARCH */
+#wordsearch { background: var(--off-white); padding: 80px 24px; }
+.ws-inner { max-width: 960px; margin: 0 auto; }
+.ws-layout { display: grid; grid-template-columns: 1fr 260px; gap: 32px; align-items: start; }
+@media (max-width: 768px) { .ws-layout { grid-template-columns: 1fr; } }
+.ws-grid-wrap { overflow-x: auto; }
+.ws-grid { display: inline-grid; grid-template-columns: repeat(14, 36px); gap: 2px; user-select: none; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+@media (max-width: 500px) { .ws-grid { grid-template-columns: repeat(14, 28px); } .ws-cell { width: 28px; height: 28px; font-size: 0.7rem; } }
+.ws-cell { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 5px; cursor: pointer; transition: background 0.15s, color 0.15s; color: var(--black); background: transparent; -webkit-tap-highlight-color: transparent; }
+.ws-cell:hover { background: var(--royal-pale); }
+.ws-cell.selecting { background: var(--royal-light); color: white; }
+.ws-cell.found { background: var(--royal); color: white; }
+.ws-cell.found-new { animation: cellPop 0.4s var(--ease-out); }
+@keyframes cellPop { 0%{transform:scale(1);} 50%{transform:scale(1.25);} 100%{transform:scale(1);} }
+.ws-words { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.ws-words h4 { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; }
+.ws-word-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ws-word-item { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--grey); padding: 6px 10px; border-radius: 5px; transition: all 0.3s; }
+.ws-word-item.found { color: var(--royal); background: var(--royal-pale); text-decoration: line-through; text-decoration-color: var(--royal-light); }
+.ws-envelopes-sidebar { display: flex; flex-direction: column; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.ws-envelopes-sidebar h4 { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); margin-bottom: 4px; }
+.envelope-track-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px dashed var(--border); border-radius: 8px; background: #fafbfc; opacity: 0.35; transform: scale(0.96); transition: all 0.5s var(--ease-out); }
+.envelope-track-item.unlocked { opacity: 1; transform: scale(1); border: 1px solid var(--tulip-pink); background: linear-gradient(135deg,#fffcfc 0%,#fff5f6 100%); cursor: pointer; box-shadow: 0 4px 12px rgba(232,180,184,0.15); }
+.envelope-track-item.unlocked:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(232,180,184,0.3); border-color: var(--tulip-rose); }
+.envelope-icon-view { font-size: 1.6rem; transition: transform 0.3s; }
+.envelope-track-item.unlocked:hover .envelope-icon-view { transform: scale(1.15) rotate(4deg); }
+.envelope-info { display: flex; flex-direction: column; max-width: 170px; }
+.envelope-info .env-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--grey); }
+.envelope-track-item.unlocked .env-label { color: var(--tulip-rose); font-weight: 600; }
+.envelope-info .env-title { font-family: var(--font-serif); font-size: 1.075rem; font-weight: 600; color: #555; line-height: 1.2; }
+.envelope-track-item.unlocked .env-title { color: var(--royal); }
+.ws-compliment { margin-top: 20px; min-height: 28px; font-family: var(--font-serif); font-style: italic; font-size: 0.95rem; color: var(--royal); opacity: 0; transition: opacity 0.5s; }
+.ws-compliment.show { opacity: 1; }
+.ws-celebrate { text-align: center; margin-top: 24px; font-family: var(--font-serif); font-size: 1.1rem; color: var(--royal); font-style: italic; opacity: 0; transition: opacity 0.8s; }
+.ws-celebrate.show { opacity: 1; }
+
+/* ── PHOTO CAROUSEL (tulip roulette) ── */
+#album { background: var(--off-white); padding: 80px 24px; }
+.album-inner { max-width: 960px; margin: 0 auto; }
+.carousel-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel-track {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  /* rotating ring — JS drives the angle via CSS var */
+}
+.tulip-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  z-index: 10;
+  animation: tulipBob 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 18px rgba(201,126,133,0.35));
+  pointer-events: none;
+  user-select: none;
+}
+@keyframes tulipBob { 0%,100%{transform:translate(-50%,-50%) scale(1) rotate(-2deg);} 50%{transform:translate(-50%,-50%) scale(1.06) rotate(2deg);} }
+
+.carousel-item {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  top: 50%;
+  left: 50%;
+  /* each item placed via inline transform set by JS */
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid var(--white);
+  box-shadow: 0 4px 18px rgba(26,58,107,0.18);
+  transition: box-shadow 0.3s, border-color 0.3s;
+  background: var(--royal-pale);
+}
+.carousel-item:hover {
+  border-color: var(--tulip-pink);
+  box-shadow: 0 8px 28px rgba(201,126,133,0.4);
+  z-index: 20;
+}
+.carousel-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  pointer-events: none;
+}
+.carousel-item .ci-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; color: var(--royal-light); font-size: 0.6rem; letter-spacing: 0.08em;
+}
+.carousel-item .ci-placeholder span:first-child { font-size: 1.4rem; opacity: 0.4; }
+.carousel-pause-btn {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.72rem;
+  color: var(--grey);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.carousel-pause-btn:hover { border-color: var(--royal-light); color: var(--royal); }
+
+/* LETTER MODAL */
+.letter-popup-modal { position: fixed; inset: 0; background: rgba(14,36,72,0.6); backdrop-filter: blur(8px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+.letter-popup-modal.active { opacity: 1; pointer-events: all; }
+.letter-popup-paper { background: #fffcf7; background-image: linear-gradient(rgba(220,230,240,0.15) 1px, transparent 1px); background-size: 100% 24px; border-radius: 12px; box-shadow: 0 20px 50px rgba(10,25,50,0.3); width: 100%; max-width: 520px; max-height: 85vh; overflow-y: auto; padding: 40px 36px; position: relative; transform: translateY(30px) scale(0.95); transition: transform 0.5s var(--ease-out); border: 1px solid #f2eade; }
+.letter-popup-modal.active .letter-popup-paper { transform: translateY(0) scale(1); }
+.letter-popup-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--grey); transition: color 0.2s; line-height: 1; }
+.letter-popup-close:hover { color: var(--error); }
+.letter-popup-hdr { font-family: var(--font-serif); font-size: 2.0rem; color: var(--royal); margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 8px; font-style: italic; }
+.letter-popup-txt { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.8; color: #333; white-space: pre-wrap; font-style: italic; }
+
+.site-footer { background: var(--royal); color: rgba(255,255,255,0.6); text-align: center; padding: 40px 24px; font-size: 0.78rem; line-height: 1.8; }
+.site-footer strong { color: white; font-weight: 500; }
+
+.confetti-piece { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 9999; animation: confettiFall var(--cd, 2.5s) ease-in forwards; }
+@keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1;} 100%{transform:translateY(100vh) rotate(720deg);opacity:0;} }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: GRADES -->
+<div id="screen-grades" class="screen active">
+  <div class="portal-header">
+    <div class="logo">UniPortal — Student Information System</div>
+    <div class="user-info">Welcome, Student</div>
+  </div>
+  <nav class="portal-nav">
+    <a href="#">Dashboard</a><a href="#">Enrollment</a><a href="#" class="active-nav">Grades</a>
+    <a href="#">Schedule</a><a href="#">Finance</a><a href="#">Documents</a>
+  </nav>
+  <div class="portal-body">
+    <div class="portal-section-title">Academic Record</div>
+    <div class="portal-card">
+      <div class="portal-card-header">
+        <span>GRADES — 2ND SEMESTER &nbsp;|&nbsp; A.Y. 2024–2025</span>
+        <span style="font-size:0.72rem;opacity:0.7;">College of Engineering</span>
+      </div>
+      <table class="grades-table">
+        <thead>
+          <tr>
+            <th>Subject Code</th><th>Subject Description</th>
+            <th>Midterm Grade</th><th>Final Grade</th><th>Units</th>
+          </tr>
+        </thead>
+        <tbody id="grades-tbody"></tbody>
+      </table>
+      <div class="portal-meta">
+        <div>Student No.: <span>2025-3545987</span></div>
+        <div>Program: <span>BS Computer Engineering</span></div>
+        <div>Year Level: <span>3rd Year</span></div>
+        <div>Section: <span>CPE2A</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="countdown-bar"><div class="countdown-bar-fill" id="countdown-fill"></div></div>
+</div>
+
+<!-- SCREEN 2: PASSWORD (disguised as session re-auth) -->
+<div id="screen-password" class="screen">
+  <div class="pw-portal-header">
+    <div class="logo">UniPortal — Student Information System</div>
+    <div class="user-info">Session expired</div>
+  </div>
+  <nav class="pw-portal-nav">
+    <a href="#">Dashboard</a><a href="#">Enrollment</a><a href="#" class="active-nav">Grades</a>
+    <a href="#">Schedule</a><a href="#">Finance</a><a href="#">Documents</a>
+  </nav>
+  <div class="pw-body">
+    <div class="pw-session-card">
+      <div class="pw-session-header">
+        <span>⚠️</span>
+        <span>Your session has expired due to inactivity</span>
+      </div>
+      <div class="pw-session-body">
+        <h3>Re-authentication required</h3>
+        <p>For your security, please confirm your identity to continue viewing this page. Enter your account password to resume your session.</p>
+        <div class="pw-field-label">Password</div>
+        <div class="pw-input-wrap">
+          <input type="password" id="pw-input" class="pw-input" placeholder="MM-DD-YYYY" autocomplete="current-password" />
+          <button class="pw-eye-btn" id="pw-eye-btn" type="button" aria-label="Toggle password visibility">
+            <svg id="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eye-closed" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <!-- subtle hint — looks like a system note, only she'll know -->
+        <div class="pw-hint-row">
+          <span class="hint-icon">ℹ️</span>
+          <span>Password format: <strong>MM-DD-YYYY</strong> &nbsp;·&nbsp; Use the date when we first talked</span>
+        </div>
+        <button class="pw-btn" id="pw-btn">Confirm Identity</button>
+        <div class="pw-error" id="pw-error">Incorrect password. Please try again.</div>
+      </div>
+      <div class="pw-session-footer">
+        Session ID: <strong>SIS-20250517-05987</strong> &nbsp;·&nbsp; Portal version 4.2.1 &nbsp;·&nbsp;
+        <a href="#" style="color:var(--royal-light);text-decoration:none;">Forgot password?</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: MAIN ANNIVERSARY SITE -->
+<div id="screen-main" class="screen">
+  <nav class="site-nav">
+    <div class="brand">First Anniversary</div>
+    <ul>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#wordsearch">Words</a></li>
+      <li><a href="#album">Album</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-sub">Happy Anniversary</div>
+    <h1 class="hero-title">To the one who<br><em>makes everything better</em></h1>
+    <div class="hero-date">✦ June 8, 2026 ✦</div>
+    <p class="hero-message">
+      Every moment with you has been a gift I didn't know I was waiting for. Thank you for every laugh, every late-night conversation, and every quiet second that somehow meant everything. This little corner of the internet is all for you.
+    </p>
+  </section>
+
+  <section id="quiz">
+    <div class="quiz-inner">
+      <div class="section-label">Milestones & Memories</div>
+      <h2 class="section-title">A quiz about us & important dates</h2>
+      <div class="section-divider"></div>
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="quiz-card" id="quiz-card"></div>
+    </div>
+  </section>
+
+  <section id="wordsearch" class="section">
+    <div class="ws-inner">
+      <div class="section-label">Find the words</div>
+      <h2 class="section-title">What I see in you</h2>
+      <div class="section-divider"></div>
+      <div class="ws-layout">
+        <div>
+          <div class="ws-grid-wrap"><div class="ws-grid" id="ws-grid"></div></div>
+          <div class="ws-compliment" id="ws-compliment"></div>
+          <div class="ws-celebrate" id="ws-celebrate">🌷 You found every single one. Just like how I found you — and I'm so glad I did. 🌷</div>
+        </div>
+        <div>
+          <div class="ws-words">
+            <h4>Find these words</h4>
+            <ul class="ws-word-list" id="ws-word-list"></ul>
+          </div>
+          <div class="ws-envelopes-sidebar">
+            <h4>Unlocked Letters</h4>
+            <div class="envelope-track-item" id="env-track-0" data-index="0">
+              <span class="envelope-icon-view">🔒</span>
+              <div class="envelope-info"><span class="env-label">Locked (2 words)</span><span class="env-title">Love letter</span></div>
+            </div>
+            <div class="envelope-track-item" id="env-track-1" data-index="1">
+              <span class="envelope-icon-view">🔒</span>
+              <div class="envelope-info"><span class="env-label">Locked (4 words)</span><span class="env-title">Appreciation letter</span></div>
+            </div>
+            <div class="envelope-track-item" id="env-track-2" data-index="2">
+              <span class="envelope-icon-view">🔒</span>
+              <div class="envelope-info"><span class="env-label">Locked (6 words)</span><span class="env-title">"Hoping to be your boyfriend again for the next years" letter</span></div>
+            </div>
+            <div class="envelope-track-item" id="env-track-3" data-index="3">
+              <span class="envelope-icon-view">🔒</span>
+              <div class="envelope-info"><span class="env-label">Locked (8 words)</span><span class="env-title">Anniversary letter</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO ALBUM — tulip carousel -->
+  <section id="album">
+    <div class="album-inner">
+      <div class="section-label">Memories</div>
+      <h2 class="section-title">Our little album</h2>
+      <div class="section-divider"></div>
+      <div class="carousel-stage">
+        <div class="carousel-track" id="carousel-track">
+          <div class="tulip-center">🌷</div>
+          <!-- photo items injected by JS -->
+        </div>
+        <button class="carousel-pause-btn" id="carousel-pause-btn">⏸ Pause</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div>Made with every bit of love I have 🌷</div>
+    <div style="margin-top:6px;"><strong>For you.</strong> Always.</div>
+    <div style="margin-top:16px;opacity:0.4;font-size:0.7rem;">— with love, from me</div>
+  </footer>
+</div>
+
+<!-- REVEAL OVERLAY -->
+<div id="reveal-overlay">
+  <div class="reveal-ripple" id="reveal-ripple"></div>
+  <div class="reveal-tulip" id="reveal-tulip">🌷</div>
+</div>
+
+<!-- LETTER MODAL -->
+<div class="letter-popup-modal" id="letter-modal">
+  <div class="letter-popup-paper">
+    <button class="letter-popup-close" id="letter-modal-close">&times;</button>
+    <h3 class="letter-popup-hdr" id="letter-modal-title"></h3>
+    <p class="letter-popup-txt" id="letter-modal-body"></p>
+  </div>
+</div>
+
+<script>
+const GRADES = [
+  { code:'CPEDDL1L', desc:'COMPUTER ENGINEERING DRAFTING AND DESIGN - LAB', midterm:3.00, final:3.50, units:1.0 },
+  { code:'CPMICR1L', desc:'MICROPROCESSOR AND MICROCONTROLLER SYSTEMS AND DESIGN - LAB', midterm:1.00, final:2.00, units:1.0 },
+  { code:'CPMICR30', desc:'MICROPROCESSOR AND MICROCONTROLLER SYSTEMS AND DESIGN', midterm:2.00, final:2.00, units:3.0 },
+  { code:'EECKTC1L', desc:'ELECTRICAL CIRCUITS FOR CpE - LAB', midterm:2.50, final:3.50, units:1.0 },
+  { code:'EECKTC30', desc:'ELECTRICAL CIRCUITS FOR CpE', midterm:1.00, final:2.00, units:3.0 },
+  { code:'GEETH01X', desc:'ETHICS', midterm:3.50, final:4.00, units:4.0 },
+  { code:'GEPCM01X', desc:'PURPOSIVE COMMUNICATION', midterm:4.00, final:4.00, units:3.0 },
+];
+
+const PASSWORD = '05-17-2025';
+
+const LETTERS = [
+  { title: 'Love letter', body: 'Happy first anniversary, honey. You are the first thought I have when I wake and the last comfort I carry to sleep. Your laugh, your touch, the way you see the world — they live inside me and shape everything I am. With you, ordinary days become gentle adventures, and hard days become softer just because you\'re by my side. Loving you has been the most beautiful and natural thing I\'ve ever done. When I say I love you with all my life, I mean it in every small, steady way. I love you in the promises and pinky promises I keep, in the patience I try to show, and in the plans I want to build with you. I love you in the quiet mornings and the late-night talks, in the silly jokes only we understand, and in the shared silences that feel like home. You are my fave person, my safe place, my greatest joy. Baby, If loving you is a journey, I hope it never ends. I want to grow with you, celebrate you, support you, and stand beside you through everything that comes. Whatever the future brings, my love for you will be constant — deeper than words, truer than any promise, and held with all my life. Happy first anniversary, baby ko. I love you beyond all beyonds.' },
+  { title: 'Appreciation letter', body: 'From the small, ordinary moments to the life-changing ones, you make everything brighter, kinder, and more meaningful. Honey, I\'m always beyond grateful for having you. You bring out the best in me with your kindness, patience, and laughter. Your support steadies me when things feel uncertain, and your encouragement pushes me to try harder and dream bigger. I love the way you notice the little things, how your smile can turn a bad day around, and how your presence feels like home. Being with you has taught me what real partnership looks like: trust, honesty, and the freedom to be myself. Thank you for the love you give so freely and for every way you show up for us. On this first anniversary, I want you to know my gratitude is not just for who you are today but for who you help me become. I love you deeply, and I promise to keep showing up — with love, respect, and the small everyday gestures that make our bond stronger. Thank you for choosing me, for trusting me, and for filling my life with so much love. Happy first anniversary, my baby. I am always beyond grateful for having you. I love you super duper much!' },
+  { title: '"Hoping to be your boyfriend again for the next years" letter', body: 'As we celebrate our first year together, my heart overflows with gratitude for every memory we have made and for the gentle, beautiful way you have changed my life. Honey, there\'s something I want to say plainly, and with everything I feel: I hope to be your boyfriend not just for this year, but for many, many more — until the day you smilingly call me your husband or asawa ko. Being with you has shown me the kind of love I want to build my life around. I want to keep making small, perfect moments with you — lazy mornings wrapped in each other\'s arms, silly plans that turn into our favorite stories, trips we still dream about, celebrations we\'ll fill with laughter, and the ordinary days that feel magical simply because you\'re there. I promise to be the one you can always trust, the one who makes you laugh, and the one you can lean on without a second thought. Baby, I promise to listen with my whole heart, to learn from our mistakes, and to grow with you every step of the way. I am not rushing the future; I\'m savoring the present and imagining it unfolding into a life we both love. If you\'ll have me, I want to stand by you through everything, to cheer the loudest for your dreams, to hold you steady when things get hard, and to fill our years with kindness and joy. And if one day you want more, my greatest hope is to be the one you choose to call your husband — humbled and so proud to share a lifetime with you. Thank you for every day, every smile, every moment. I hope I get to wake up beside you for countless tomorrows, loving you with all that I am. Always yours, honey. I love you very much!' },
+  { title: 'Anniversary letter', body: 'Honey, this past 12 months with you has been a beautiful chapter of my life — one I hold closer than anything else that\'s ever happened to me. From the moment we first met and had that overnight sleepover where I also gave you chrysanthemums, to our first date at Ronac Art Center, every memory we made has stayed with me and shaped my world. I still smile thinking about our first meet-up, the way we talked like we\'d known each other much longer, and how comfortable I felt spending the night together. Our first date at Ronac was special — the art, the conversation, the little moments that made me realize how rare you are, that even though it did not end in a way we expected. Celebrating your birthday and my birthday together made it feel sweeter, and even when we weren\'t together for Christmas and New Year, those seasons only made me appreciate you more. Our first staycation that felt like a tiny universe built just for us where we really enjoy the bahay bahayan edition, and our first Valentine\'s together showed me how thoughtful and loving you are despite the unexpected circumstances. All these memories — the laughter, the quiet talks, the small adventures, and the times we stood by each other even when apart — are treasured within me beyond all that has happened in my life. They\'re not just moments; they\'re pieces of us I carry everywhere. You\'ve given me more joy, comfort, and meaning than I ever expected, and every memory with you deepens how grateful I am. Baby, on our first anniversary, I want you to know I love you so much. I\'m always beyond grateful for having you, and I look forward to many more firsts and countless ordinary days made extraordinary because we share them. Thank you for being my partner, my warmth, and my favorite person. Again, happy first anniversary, my LAUF, Love Always Until Forever. I treasure you always, I love you so much, my baby.' }
+];
+
+const PHOTOS = Array.from({length:12}, (_,i) => ({ src:`ph${i+1}.jpg`, label:`ph${i+1}` }));
+
+const QUIZ = [
+  { q:'What milestone date marks the very first time we talked?', opts:['May 10, 2025','May 17, 2025','June 1, 2025','June 8, 2025'], a:1, feedback:'May 17, 2025 — The beautiful day everything started! 💬' },
+  { q:'What is our favorite flower?', opts:['Roses','Sunflowers','Tulips','Daisies'], a:2, feedback:'Tulips — always 🌷' },
+  { q:'Which day marks our official anniversary?', opts:['May 17','June 1','June 8','June 18'], a:2, feedback:'June 8 — A date etched in my heart forever ✨' },
+  { q:'Which color and shades do we both like?', opts:['Purple, silver, grey','Royale blue, black, white','Pink, mint, cream','Red, gold, navy'], a:1, feedback:'Royale blue, black, and white — an elegant trio ✦' },
+  { q:"What's our favorite burger?", opts:['Big Mac','Yumburger','Whopper',"Angel's Burger"], a:1, feedback:'The classic Yumburger 🍔' },
+  { q:'Our comfort food', opts:['Honey soy','Potato Corner','Sriracha','Empanada'], a:2, feedback:"Wendy's Sriracha — perfectly spicy 🔥" },
+  { q:'Which street food combo do we both like?', opts:['Fish balls & squid balls','Kikiam & kwekwek','Isaw & betamax','Turon & banana cue'], a:1, feedback:'Kikiam and kwekwek — the ultimate local duo 🍢' },
+  { q:'Which fruit do we both strongly dislike?', opts:['Jackfruit','Durian','Bitter melon','Papaya'], a:1, feedback:'Durian — a hard no from both of us! 😆' },
+  { q:'When did we first meet in person, and what made that night special?', opts:['June 12–13, we exchanged letters','June 14–15, flowers & overnight sleepover','June 8, our first date','May 17, our first call'], a:1, feedback:'June 14–15 — chrysanthemums and our very first night together 🌸' },
+  { q:'What is our favorite soft drink?', opts:['Royal','Sprite','Mountain Dew','Sting'], a:2, feedback:'Mountain Dew — ice cold and always ours 🍃' },
+  { q:'When and where was our first official date?', opts:['July 4 at BGC','August 11 at Ronac Art Center','June 8 at SM Cubao','September 1 at Eastwood'], a:1, feedback:'August 11 at Ronac Art Center — art, conversation, and you ✨' },
+  { q:'When and where was our very first staycation?', opts:['July 10–11, Manila','August 6–7, Makati','January 6–7, QC','May 30–31, Pasig'], a:2, feedback:'January 6–7 in QC — our little bahay bahayan universe 🏠' },
+  { q:'What kind of food do we both love?', opts:['Sour food','Spicy food','Sweet food','Salty food'], a:1, feedback:'Spicy food — we can handle the heat 🌶️' },
+  { q:'What is our favorite Ilocano food?', opts:['Bagnet','Dinengdeng','Pinakbet','Empanada'], a:3, feedback:'Empanada — crispy, savoury perfection 🥟' },
+  { q:"What is our theme song?", opts:['Mr. Bean','Hawak mo ang beat','Batang ina','Brazilian Dance'], a:0, feedback:'Mr. Bean — tanatantananatantanantan! 🎵' },
+];
+
+const WS_WORDS_TARGETS = ["consistency","patience","kindness","genuineness","faithful","communication","love","honesty"];
+const COMPLIMENTS = [
+  "You make loving you the easiest thing in the world. ❤️",
+  "Your patience with me is a gift I promise to cherish. 🕊️",
+  "Your kindness radiates into everything and everyone around you. ✨",
+  "I adore your genuineness; you are perfectly, beautifully you. 🌷",
+  "Thank you for being so faithful and true. 🤝",
+  "Our communication brings me closer to you every single day. 💬",
+  "Love is a small word, but it holds everything I feel for you. 💖",
+  "Your honesty is my anchor. I trust you with my whole heart. ⚓"
+];
+
+const WS_GRID_MATRIX = [
+  ['W','J','B','H','S','Y','A','U','Q','H','C','B','N','H'],
+  ['C','S','W','Z','P','G','H','G','P','O','F','G','K','C'],
+  ['P','A','T','I','E','N','C','E','N','L','E','A','O','D'],
+  ['P','K','L','M','V','G','H','S','Q','N','L','M','F','F'],
+  ['H','K','T','F','Q','G','I','K','U','U','M','W','E','Y'],
+  ['Y','P','R','U','V','S','Z','I','F','U','D','N','X','C'],
+  ['J','B','Y','Y','T','J','N','H','N','K','K','H','L','J'],
+  ['E','C','V','E','P','E','T','I','Q','I','O','R','R','C'],
+  ['R','J','N','T','N','I','C','M','D','N','L','J','H','N'],
+  ['T','C','P','E','A','A','R','U','E','D','F','O','W','J'],
+  ['Y','B','S','F','T','H','W','S','Z','N','M','P','V','L'],
+  ['Y','S','M','I','T','W','T','A','B','E','M','Y','X','E'],
+  ['G','R','O','L','R','Y','S','K','S','S','N','J','W','R'],
+  ['G','N','X','H','F','T','G','X','Y','S','M','Q','U','W'],
+];
+
+const WS_WORD_COORDS = {
+  "consistency":[[0,10],[1,9],[2,8],[3,7],[4,6],[5,5],[6,4],[7,3],[8,2],[9,1],[10,0]],
+  "patience":[[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7]],
+  "kindness":[[6,9],[7,9],[8,9],[9,9],[10,9],[11,9],[12,9],[13,9]],
+  "genuineness":[[1,11],[2,10],[3,9],[4,8],[5,7],[6,6],[7,5],[8,4],[9,3],[10,2],[11,1]],
+  "faithful":[[10,3],[9,4],[8,5],[7,6],[6,7],[5,8],[4,9],[3,10]],
+  "communication":[[1,13],[2,12],[3,11],[4,10],[5,9],[6,8],[7,7],[8,6],[9,5],[10,4],[11,3],[12,2],[13,1]],
+  "love":[[8,10],[9,11],[10,12],[11,13]],
+  "honesty":[[6,11],[7,10],[8,9],[9,8],[10,7],[11,6],[12,5]],
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupFakePortal();
+  setupPasswordGate();
+  setupCarousel();
+  setupQuizEngine();
+  setupWordSearchEngine();
+  setupEnvelopeModalSystem();
+});
+
+/* ── SCREEN TRANSITIONS ── */
+function switchScreen(fromId, toId) {
+  const fromEl = document.getElementById(fromId);
+  const toEl   = document.getElementById(toId);
+  if (toId === 'screen-main') {
+    const ripple = document.getElementById('reveal-ripple');
+    const tulip  = document.getElementById('reveal-tulip');
+    ripple.classList.remove('go','shrink'); tulip.classList.remove('pop');
+    void ripple.offsetWidth;
+    ripple.classList.add('go');
+    setTimeout(()=>{ tulip.classList.add('pop'); }, 300);
+    setTimeout(()=>{ fromEl.classList.remove('active','exit'); toEl.classList.add('active'); }, 700);
+    setTimeout(()=>{ ripple.classList.remove('go'); void ripple.offsetWidth; ripple.classList.add('shrink'); }, 900);
+    setTimeout(()=>{ ripple.classList.remove('shrink'); tulip.classList.remove('pop'); }, 1700);
+  } else {
+    fromEl.classList.add('exit');
+    setTimeout(()=>{ fromEl.classList.remove('active','exit'); toEl.classList.add('active'); }, 750);
+  }
+}
+
+/* ── FAKE GRADES PORTAL ── */
+function setupFakePortal() {
+  const tbody = document.getElementById('grades-tbody');
+  GRADES.forEach(g => {
+    const r = document.createElement('tr');
+    r.innerHTML = `<td>${g.code}</td><td>${g.desc}</td><td>${g.midterm.toFixed(2)}</td><td>${g.final.toFixed(2)}</td><td>${g.units.toFixed(1)}</td>`;
+    tbody.appendChild(r);
+  });
+  const totalUnits  = GRADES.reduce((s,g)=>s+g.units,0);
+  const weightedSum = GRADES.reduce((s,g)=>s+g.final*g.units,0);
+  const gwa = (weightedSum/totalUnits).toFixed(4);
+  const gwaRow = document.createElement('tr');
+  gwaRow.className = 'total-row';
+  gwaRow.innerHTML = `<td colspan="2" style="text-align:right;font-size:0.77rem;letter-spacing:0.04em;">GENERAL WEIGHTED AVERAGE</td><td></td><td style="text-align:center;font-size:1rem;color:#1a3a6b;">${gwa}</td><td style="text-align:center;">${totalUnits.toFixed(1)}</td>`;
+  tbody.appendChild(gwaRow);
+  const fill = document.getElementById('countdown-fill');
+  setTimeout(()=>{ fill.style.width='0%'; }, 100);
+  setTimeout(()=>{ switchScreen('screen-grades','screen-password'); }, 10000);
+}
+
+/* ── PASSWORD GATE ── */
+function setupPasswordGate() {
+  const btn     = document.getElementById('pw-btn');
+  const input   = document.getElementById('pw-input');
+  const err     = document.getElementById('pw-error');
+  const eyeBtn  = document.getElementById('pw-eye-btn');
+  const eyeOpen = document.getElementById('eye-open');
+  const eyeClosed = document.getElementById('eye-closed');
+
+  eyeBtn.addEventListener('click', ()=>{
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    eyeOpen.style.display   = isHidden ? 'none' : '';
+    eyeClosed.style.display = isHidden ? '' : 'none';
+    input.focus();
+  });
+
+  function check() {
+    if (input.value.trim() === PASSWORD) {
+      switchScreen('screen-password','screen-main');
+    } else {
+      err.classList.add('visible');
+      setTimeout(()=>err.classList.remove('visible'), 3000);
+    }
+  }
+  btn.addEventListener('click', check);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+}
+
+/* ── TULIP CAROUSEL ── */
+function setupCarousel() {
+  const track = document.getElementById('carousel-track');
+  const pauseBtn = document.getElementById('carousel-pause-btn');
+  const COUNT = PHOTOS.length;        // 12
+  const RADIUS = 200;                 // orbit radius in px
+  const ITEM_SIZE = 96;
+  let angle = 0;                      // current rotation angle (degrees)
+  let paused = false;
+  let rafId = null;
+
+  // Build items
+  const items = PHOTOS.map((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'carousel-item';
+    el.innerHTML = `
+      <img src="${p.src}" alt="Memory ${i+1}" loading="lazy"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="ci-placeholder" style="display:none;">
+        <span>📸</span><span style="font-size:0.55rem;letter-spacing:0.06em;">${p.label}</span>
+      </div>`;
+    el.addEventListener('click', ()=> openLightbox(p.src, i+1));
+    track.appendChild(el);
+    return el;
+  });
+
+  function positionItems() {
+    items.forEach((el, i) => {
+      const theta = (angle + i * (360 / COUNT)) * Math.PI / 180;
+      const x = Math.cos(theta) * RADIUS;
+      const y = Math.sin(theta) * RADIUS;
+      // depth effect: items behind tulip are smaller / dimmer
+      const depth = (Math.sin(theta) + 1) / 2;  // 0 = far, 1 = near
+      const scale = 0.72 + depth * 0.38;
+      const opacity = 0.55 + depth * 0.45;
+      const zIndex = Math.round(depth * 8) + 1;
+      el.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
+      el.style.opacity = opacity;
+      el.style.zIndex = zIndex;
+    });
+  }
+
+  let last = null;
+  const SPEED = 0.012; // degrees per ms
+
+  function tick(ts) {
+    if (last !== null && !paused) {
+      angle += SPEED * (ts - last);
+      if (angle >= 360) angle -= 360;
+    }
+    last = ts;
+    positionItems();
+    rafId = requestAnimationFrame(tick);
+  }
+
+  positionItems();
+  rafId = requestAnimationFrame(tick);
+
+  pauseBtn.addEventListener('click', ()=>{
+    paused = !paused;
+    last = null;
+    pauseBtn.textContent = paused ? '▶ Resume' : '⏸ Pause';
+  });
+}
+
+/* ── LIGHTBOX ── */
+function openLightbox(src, num) {
+  let lb = document.getElementById('photo-lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'photo-lightbox';
+    lb.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(5,15,35,0.96);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;';
+    lb.innerHTML = `
+      <button id="lb-close" style="position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:2rem;cursor:pointer;line-height:1;z-index:1;">&times;</button>
+      <button id="lb-prev" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;font-size:1.4rem;padding:10px 14px;border-radius:8px;cursor:pointer;">&#8249;</button>
+      <button id="lb-next" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;font-size:1.4rem;padding:10px 14px;border-radius:8px;cursor:pointer;">&#8250;</button>
+      <img id="lb-img" style="max-width:calc(100vw - 120px);max-height:calc(100vh - 80px);object-fit:contain;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:block;" alt="">
+      <div id="lb-caption" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.5);font-size:0.75rem;letter-spacing:0.1em;white-space:nowrap;"></div>`;
+    document.body.appendChild(lb);
+    lb.addEventListener('click', e=>{ if(e.target===lb) closeLightbox(); });
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+    document.getElementById('lb-prev').addEventListener('click', e=>{ e.stopPropagation(); navigateLightbox(-1); });
+    document.getElementById('lb-next').addEventListener('click', e=>{ e.stopPropagation(); navigateLightbox(1); });
+    document.addEventListener('keydown', lbKeyHandler);
+  }
+  lb._current = num - 1;
+  updateLightboxImage();
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function lbKeyHandler(e) {
+  const lb = document.getElementById('photo-lightbox');
+  if (!lb || lb.style.display==='none') return;
+  if (e.key==='Escape') closeLightbox();
+  if (e.key==='ArrowLeft') navigateLightbox(-1);
+  if (e.key==='ArrowRight') navigateLightbox(1);
+}
+function navigateLightbox(dir) {
+  const lb = document.getElementById('photo-lightbox');
+  lb._current = (lb._current + dir + PHOTOS.length) % PHOTOS.length;
+  updateLightboxImage();
+}
+function updateLightboxImage() {
+  const lb = document.getElementById('photo-lightbox');
+  const img = document.getElementById('lb-img');
+  const caption = document.getElementById('lb-caption');
+  const p = PHOTOS[lb._current];
+  img.src = p.src;
+  img.alt = `Memory ${lb._current+1}`;
+  caption.textContent = `${p.label}  ·  ${lb._current+1} / ${PHOTOS.length}`;
+}
+function closeLightbox() {
+  const lb = document.getElementById('photo-lightbox');
+  if (lb) lb.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+/* ── QUIZ ENGINE ── */
+function setupQuizEngine() {
+  let currentIdx = 0, score = 0;
+  const progressEl = document.getElementById('quiz-progress');
+  const cardEl     = document.getElementById('quiz-card');
+
+  function initProgress() {
+    progressEl.innerHTML = '';
+    QUIZ.forEach(()=>{ const d=document.createElement('div'); d.className='qp-dot'; progressEl.appendChild(d); });
+  }
+  function renderQuestion() {
+    if (currentIdx >= QUIZ.length) { renderScore(); return; }
+    const qData = QUIZ[currentIdx];
+    Array.from(progressEl.children).forEach((d,i)=>{ d.className='qp-dot'; if(i<currentIdx) d.classList.add('done'); });
+    progressEl.children[currentIdx].classList.add('done');
+    cardEl.innerHTML = `
+      <div class="quiz-q-num">Question ${currentIdx+1} of ${QUIZ.length}</div>
+      <div class="quiz-question">${qData.q}</div>
+      <div class="quiz-options">${qData.opts.map((o,i)=>`<button class="quiz-opt" data-idx="${i}">${o}</button>`).join('')}</div>
+      <div class="quiz-feedback"></div>`;
+    cardEl.classList.remove('exiting'); cardEl.classList.add('entering');
+    cardEl.offsetHeight; cardEl.classList.remove('entering');
+    const opts = cardEl.querySelectorAll('.quiz-opt');
+    const feedback = cardEl.querySelector('.quiz-feedback');
+    opts.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const sel = parseInt(btn.dataset.idx);
+        opts.forEach(b=>b.disabled=true);
+        if (sel===qData.a) { btn.classList.add('correct-opt'); progressEl.children[currentIdx].classList.add('correct'); feedback.textContent=qData.feedback; score++; }
+        else { btn.classList.add('wrong-opt'); opts[qData.a].classList.add('correct-opt'); progressEl.children[currentIdx].classList.add('wrong'); feedback.textContent=`Not quite! ${qData.feedback}`; }
+        setTimeout(()=>{ cardEl.classList.add('exiting'); setTimeout(()=>{ currentIdx++; renderQuestion(); },350); },1200);
+      });
+    });
+  }
+  function renderScore() {
+    cardEl.innerHTML = `
+      <div class="quiz-score">
+        <div class="score-num">${score} / ${QUIZ.length}</div>
+        <div class="score-msg">${score===QUIZ.length ? "Perfect! You remember everything perfectly ❤️" : "Beautifully done! You know us so well! 😊"}</div>
+        <button class="quiz-restart">Try Again</button>
+      </div>`;
+    cardEl.classList.remove('exiting');
+    cardEl.querySelector('.quiz-restart').addEventListener('click',()=>{
+      cardEl.classList.add('exiting');
+      setTimeout(()=>{ currentIdx=0; score=0; initProgress(); renderQuestion(); },350);
+    });
+  }
+  initProgress(); renderQuestion();
+}
+
+/* ── WORD SEARCH ENGINE ── */
+let foundWordsCount = 0;
+const trackedUnlockedStatus = [false,false,false,false];
+
+function setupWordSearchEngine() {
+  const gridEl = document.getElementById('ws-grid');
+  const listEl = document.getElementById('ws-word-list');
+  WS_WORDS_TARGETS.forEach(w=>{
+    const li = document.createElement('li');
+    li.className='ws-word-item'; li.id=`ws-word-${w}`; li.textContent=w;
+    listEl.appendChild(li);
+  });
+  for(let r=0;r<14;r++) for(let c=0;c<14;c++){
+    const cell=document.createElement('div');
+    cell.className='ws-cell'; cell.dataset.r=r; cell.dataset.c=c;
+    cell.textContent=WS_GRID_MATRIX[r][c];
+    gridEl.appendChild(cell);
+  }
+  let selecting=false, startR=0, startC=0, selectedCells=[];
+  function getCellCoords(el){ const c=el.closest('.ws-cell'); if(!c) return null; return {r:parseInt(c.dataset.r),c:parseInt(c.dataset.c)}; }
+  function clearSelection(){ gridEl.querySelectorAll('.ws-cell.selecting').forEach(c=>c.classList.remove('selecting')); selectedCells=[]; }
+  function highlightSelection(r1,c1,r2,c2){
+    gridEl.querySelectorAll('.ws-cell.selecting').forEach(c=>c.classList.remove('selecting')); selectedCells=[];
+    if(r1===r2){ const mn=Math.min(c1,c2),mx=Math.max(c1,c2); for(let c=mn;c<=mx;c++) selectedCells.push([r1,c]); }
+    else if(c1===c2){ const mn=Math.min(r1,r2),mx=Math.max(r1,r2); for(let r=mn;r<=mx;r++) selectedCells.push([r,c1]); }
+    else {
+      const rd=Math.abs(r1-r2),cd=Math.abs(c1-c2);
+      if(rd===cd){ const rs=r2>r1?1:-1,cs=c2>c1?1:-1; let r=r1,c=c1; for(let i=0;i<=rd;i++){selectedCells.push([r,c]);r+=rs;c+=cs;} }
+      else selectedCells.push([r1,c1]);
+    }
+    selectedCells.forEach(([r,c])=>{ const t=gridEl.querySelector(`[data-r="${r}"][data-c="${c}"]`); if(t) t.classList.add('selecting'); });
+  }
+  function checkSelection(){
+    if(!selectedCells.length) return;
+    let pw=""; selectedCells.forEach(([r,c])=>{ pw+=WS_GRID_MATRIX[r][c]; }); pw=pw.toLowerCase();
+    let rw=pw.split('').reverse().join('');
+    let mw=null;
+    if(WS_WORD_COORDS[pw]) mw=pw; else if(WS_WORD_COORDS[rw]) mw=rw;
+    if(mw){
+      const wi=document.getElementById(`ws-word-${mw}`);
+      if(wi&&!wi.classList.contains('found')){
+        wi.classList.add('found');
+        selectedCells.forEach(([r,c])=>{ const cl=gridEl.querySelector(`[data-r="${r}"][data-c="${c}"]`); cl.classList.add('found','found-new'); });
+        const ti=WS_WORDS_TARGETS.indexOf(mw);
+        const ce=document.getElementById('ws-compliment');
+        ce.textContent=COMPLIMENTS[ti]; ce.classList.add('show');
+        foundWordsCount++;
+        checkEnvelopeUnlockThresholds(foundWordsCount);
+        if(foundWordsCount===WS_WORDS_TARGETS.length){ document.getElementById('ws-celebrate').classList.add('show'); confettiBurst(); }
+      }
+    }
+  }
+  gridEl.addEventListener('mousedown',e=>{ const co=getCellCoords(e.target); if(!co) return; selecting=true; startR=co.r; startC=co.c; highlightSelection(startR,startC,startR,startC); });
+  gridEl.addEventListener('mousemove',e=>{ if(!selecting) return; const co=getCellCoords(e.target); if(!co) return; highlightSelection(startR,startC,co.r,co.c); });
+  window.addEventListener('mouseup',()=>{ if(!selecting) return; selecting=false; checkSelection(); clearSelection(); });
+  gridEl.addEventListener('touchstart',e=>{ const t=e.touches[0]; const el=document.elementFromPoint(t.clientX,t.clientY); const co=getCellCoords(el); if(!co) return; selecting=true; startR=co.r; startC=co.c; highlightSelection(startR,startC,startR,startC); e.preventDefault(); },{passive:false});
+  gridEl.addEventListener('touchmove',e=>{ if(!selecting) return; const t=e.touches[0]; const el=document.elementFromPoint(t.clientX,t.clientY); const co=getCellCoords(el); if(!co) return; highlightSelection(startR,startC,co.r,co.c); e.preventDefault(); },{passive:false});
+  gridEl.addEventListener('touchend',()=>{ if(!selecting) return; selecting=false; checkSelection(); clearSelection(); });
+}
+
+function checkEnvelopeUnlockThresholds(count){
+  [2,4,6,8].forEach((thr,idx)=>{
+    if(count>=thr&&!trackedUnlockedStatus[idx]){
+      trackedUnlockedStatus[idx]=true;
+      const row=document.getElementById(`env-track-${idx}`);
+      row.classList.add('unlocked');
+      row.querySelector('.envelope-icon-view').textContent='✉️';
+      row.querySelector('.env-label').textContent='✦ Tap to Open ✦';
+      confettiBurstSmall();
+    }
+  });
+}
+
+function setupEnvelopeModalSystem(){
+  const modal=document.getElementById('letter-modal');
+  const modalTitle=document.getElementById('letter-modal-title');
+  const modalBody=document.getElementById('letter-modal-body');
+  const modalClose=document.getElementById('letter-modal-close');
+  document.querySelectorAll('.envelope-track-item').forEach(row=>{
+    row.addEventListener('click',()=>{
+      const idx=parseInt(row.dataset.index);
+      if(trackedUnlockedStatus[idx]){ modalTitle.textContent=LETTERS[idx].title; modalBody.textContent=LETTERS[idx].body; modal.classList.add('active'); }
+    });
+  });
+  modalClose.addEventListener('click',()=>modal.classList.remove('active'));
+  modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('active'); });
+}
+
+function confettiBurst(){
+  const colors=['#1a3a6b','#3b6fc9','#c97e85','#e8b4b8','#f7f9fc','#ffd700'];
+  for(let i=0;i<70;i++){
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.left=Math.random()*100+'vw'; p.style.top='-5vh';
+    p.style.setProperty('--cd',(1.5+Math.random()*2)+'s');
+    p.style.transform=`rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),3500);
+  }
+}
+function confettiBurstSmall(){
+  const colors=['#e8b4b8','#c97e85','#3b6fc9','#ffd700'];
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.left=(60+Math.random()*35)+'vw'; p.style.top=(40+Math.random()*40)+'vh';
+    p.style.setProperty('--cd',(1.0+Math.random()*1.5)+'s');
+    document.body.appendChild(p); setTimeout(()=>p.remove(),2000);
+  }
+}
+</script>
+</body>
+</html>
