@@ -608,7 +608,7 @@ function setupFakePortal() {
   const gwa = (weightedSum/totalUnits).toFixed(4);
   const gwaRow = document.createElement('tr');
   gwaRow.className = 'total-row';
-  gwaRow.innerHTML = `<td colspan="2" style="text-align:right;font-size:0.78rem;letter-spacing:0.04em;">GENERAL WEIGHTED AVERAGE</td><td></td><td style="text-align:center;font-size:1rem;color:#1a3a6b;">${gwa}</td><td style="text-align:center;">${totalUnits.toFixed(1)}</td>`;
+  gwaRow.innerHTML = `<td colspan="2" style="text-align:right;font-size:0.77rem;letter-spacing:0.04em;">GENERAL WEIGHTED AVERAGE</td><td></td><td style="text-align:center;font-size:1rem;color:#1a3a6b;">${gwa}</td><td style="text-align:center;">${totalUnits.toFixed(1)}</td>`;
   tbody.appendChild(gwaRow);
   const fill = document.getElementById('countdown-fill');
   setTimeout(()=>{ fill.style.width='0%'; }, 100);
