@@ -17,12 +17,10 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-height:100vh;overflow-x:hidden}
 
-/* SCREENS */
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .8s var(--ease),transform .8s var(--ease);transform:translateY(12px);overflow-y:auto;z-index:1}
 .screen.active{opacity:1;pointer-events:all;transform:none;z-index:2}
 .screen.exit{opacity:0;transform:translateY(-12px);z-index:1;pointer-events:none}
 
-/* PORTAL CHROME */
 .portal-header{background:var(--royal);color:var(--white);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .portal-header .logo{font-family:var(--serif);font-size:1.2rem;font-weight:600;letter-spacing:.04em}
 .portal-header .user-info{font-size:.78rem;opacity:.8}
@@ -49,7 +47,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .countdown-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:var(--royal-pale);z-index:999}
 .countdown-bar-fill{height:100%;background:var(--royal-light);width:100%;transition:width 10s linear}
 
-/* PASSWORD */
 .pw-body{max-width:480px;width:100%;margin:60px auto;padding:0 16px}
 .pw-session-card{background:var(--white);border:1px solid var(--border);border-radius:6px;overflow:hidden}
 .pw-session-header{background:#fff8e1;border-bottom:1px solid #ffe082;padding:12px 18px;display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:500;color:#7a5900}
@@ -70,7 +67,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .pw-error.visible{opacity:1}
 .pw-session-footer{padding:12px 24px;background:var(--off-white);border-top:1px solid var(--border);font-size:.72rem;color:var(--grey)}
 
-/* REVEAL */
 #reveal-overlay{position:fixed;inset:0;z-index:9998;pointer-events:none;display:flex;align-items:center;justify-content:center}
 .reveal-ripple{position:absolute;width:0;height:0;border-radius:50%;background:radial-gradient(circle,#e8b4b8 0%,#3b6fc9 45%,#1a3a6b 100%);transform:translate(-50%,-50%);top:50%;left:50%;opacity:0}
 .reveal-ripple.go{animation:rippleExpand 1.2s cubic-bezier(.22,1,.36,1) forwards}
@@ -81,7 +77,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .reveal-tulip.pop{animation:tulipPop 1s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes tulipPop{0%{transform:translate(-50%,-50%) scale(0) rotate(-20deg);opacity:0}40%{transform:translate(-50%,-50%) scale(1.4) rotate(8deg);opacity:1}70%{transform:translate(-50%,-50%) scale(.9) rotate(-4deg);opacity:1}100%{transform:translate(-50%,-50%) scale(1.2) rotate(0);opacity:0}}
 
-/* MAIN SITE */
 #screen-main{background:var(--white);display:block;position:relative;overflow-y:auto;overflow-x:hidden}
 .site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px}
 .site-nav .brand{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--royal);font-style:italic}
@@ -102,7 +97,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .section-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:var(--royal);margin-bottom:32px;line-height:1.2}
 .section-divider{width:40px;height:2px;background:var(--tulip-rose);margin-bottom:32px}
 
-/* QUIZ */
 #quiz{padding:80px 24px}
 .quiz-inner{max-width:640px;margin:0 auto}
 .quiz-progress{display:flex;gap:4px;margin-bottom:32px;flex-wrap:wrap}
@@ -128,58 +122,20 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .quiz-restart{background:none;border:1.5px solid var(--royal);border-radius:8px;padding:10px 24px;color:var(--royal);font-size:.82rem;cursor:pointer;transition:background .2s,color .2s}
 .quiz-restart:hover{background:var(--royal);color:var(--white)}
 
-/* ── WORD SEARCH — Mobile-First, fully fluid ── */
 #wordsearch{background:var(--off-white);padding:80px 0}
 .ws-inner{max-width:960px;margin:0 auto;padding:0 12px}
 .ws-layout{display:grid;grid-template-columns:1fr 240px;gap:24px;align-items:start}
 @media(max-width:768px){.ws-layout{grid-template-columns:1fr}}
-
-/* The grid fills its container; JS sets --ws-cols for dynamic sizing */
 .ws-grid-scroll{width:100%;overflow:visible;padding-bottom:4px}
-.ws-grid{
-  display:grid;
-  grid-template-columns:repeat(14,1fr);
-  gap:2px;
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:6px;
-  width:100%;
-  /* prevent any overflow */
-  box-sizing:border-box;
-}
-/* Square cells via padding-bottom trick — fully responsive */
-.ws-cell{
-  position:relative;
-  width:100%;
-  padding-bottom:100%; /* makes it square */
-  border-radius:3px;
-  cursor:pointer;
-  transition:background .12s,color .12s;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-}
-.ws-cell-inner{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  letter-spacing:.01em;
-  text-transform:uppercase;
-  font-size:clamp(0.5rem, 2.2vw, 0.78rem);
-  line-height:1;
-}
-@media(max-width:480px){
-  .ws-cell-inner{font-size:clamp(0.5rem,3.5vw,0.72rem)}
-}
+.ws-grid{display:grid;grid-template-columns:repeat(14,1fr);gap:2px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:6px;width:100%;box-sizing:border-box}
+.ws-cell{position:relative;width:100%;padding-bottom:100%;border-radius:3px;cursor:pointer;transition:background .12s,color .12s;-webkit-tap-highlight-color:transparent;user-select:none}
+.ws-cell-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:.01em;text-transform:uppercase;font-size:clamp(0.5rem,2.2vw,0.78rem);line-height:1}
+@media(max-width:480px){.ws-cell-inner{font-size:clamp(0.5rem,3.5vw,0.72rem)}}
 .ws-cell:hover .ws-cell-inner{background:var(--royal-pale);border-radius:3px}
 .ws-cell.selecting .ws-cell-inner{background:var(--royal-light);color:var(--white);border-radius:3px}
 .ws-cell.found .ws-cell-inner{background:var(--royal);color:var(--white);border-radius:3px}
 .ws-cell.found-new .ws-cell-inner{animation:cellPop .4s var(--ease)}
 @keyframes cellPop{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
-
 .ws-words{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
 .ws-words h4{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:14px}
 .ws-word-list{list-style:none;display:flex;flex-direction:column;gap:6px}
@@ -202,7 +158,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .ws-celebrate{text-align:center;margin-top:20px;font-family:var(--serif);font-size:1.05rem;color:var(--royal);font-style:italic;opacity:0;transition:opacity .8s;padding:0 4px}
 .ws-celebrate.show{opacity:1}
 
-/* MEMORY GAME */
 #memorygame{background:var(--white);padding:80px 24px}
 .mg-inner{max-width:720px;margin:0 auto}
 .mg-stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
@@ -228,15 +183,12 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .mg-restart-btn{background:var(--royal);border:none;border-radius:8px;padding:12px 28px;color:var(--white);font-family:var(--sans);font-size:.85rem;cursor:pointer;transition:background .2s}
 .mg-restart-btn:hover{background:var(--royal-mid)}
 
-/* ── GREEN FLAGS GAME — Redesigned Harder Version ── */
 #greenflags{background:linear-gradient(160deg,#0a1a30 0%,#1a3a6b 40%,#0d3320 100%);padding:80px 24px;min-height:100vh}
 .gf-inner{max-width:780px;margin:0 auto}
 .gf-inner .section-label{color:#7ab3f5}
 .gf-inner .section-title{color:var(--white)}
 .gf-inner .section-divider{background:var(--tulip-rose)}
 .gf-desc{font-family:var(--serif);font-style:italic;color:rgba(255,255,255,.7);font-size:1rem;line-height:1.75;margin-bottom:24px}
-
-/* HUD */
 .gf-hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 @media(max-width:480px){.gf-hud{grid-template-columns:repeat(2,1fr)}}
 .gf-hud-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;text-align:center}
@@ -245,8 +197,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .gf-lives-wrap{display:flex;gap:3px;justify-content:center;font-size:1rem;min-height:24px}
 .gf-heart{transition:all .3s;display:inline-block}
 .gf-heart.lost{opacity:.2;transform:scale(.8)}
-
-/* Mode select */
 .gf-mode-select{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
 @media(max-width:480px){.gf-mode-select{grid-template-columns:1fr}}
 .gf-mode-btn{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 10px;cursor:pointer;color:var(--white);transition:all .2s;text-align:center}
@@ -254,30 +204,21 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .gf-mode-icon{font-size:1.6rem;display:block;margin-bottom:6px}
 .gf-mode-name{font-weight:600;font-size:.82rem;display:block;margin-bottom:3px}
 .gf-mode-desc{font-size:.68rem;opacity:.6;line-height:1.4;display:block}
-
-/* Timer */
 .gf-timer-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .gf-timer-bar-bg{flex:1;height:6px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
 .gf-timer-bar-fill{height:100%;background:linear-gradient(90deg,#5aad6e,#a8e6b0);border-radius:99px;transition:width .1s linear,background .3s}
 .gf-timer-txt{font-family:var(--serif);font-size:1.1rem;color:var(--white);font-weight:600;width:28px;text-align:right;flex-shrink:0}
-
-/* Round card */
 .gf-round-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:24px;backdrop-filter:blur(8px);margin-bottom:16px}
 .gf-round-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .gf-round-type{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-weight:600}
 .gf-round-type.type-identify{background:rgba(122,179,245,.2);color:#7ab3f5;border:1px solid rgba(122,179,245,.3)}
 .gf-round-type.type-sort{background:rgba(255,200,60,.2);color:#ffc83c;border:1px solid rgba(255,200,60,.3)}
 .gf-round-type.type-complete{background:rgba(167,130,255,.2);color:#a782ff;border:1px solid rgba(167,130,255,.3)}
-.gf-round-type.type-rank{background:rgba(90,173,110,.2);color:#5aad6e;border:1px solid rgba(90,173,110,.3)}
 .gf-combo-badge{font-size:.72rem;color:#ffc83c;font-weight:600;background:rgba(255,200,60,.15);padding:3px 8px;border-radius:12px;border:1px solid rgba(255,200,60,.3)}
 .gf-scenario{font-family:var(--serif);font-size:clamp(.95rem,2.5vw,1.2rem);color:var(--white);line-height:1.6;font-style:italic;margin-bottom:20px}
-
-/* Choices — various layouts */
 .gf-choices{display:flex;flex-direction:column;gap:8px}
 .gf-choices.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media(max-width:400px){.gf-choices.grid2{grid-template-columns:1fr}}
-.gf-choices.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:400px){.gf-choices.grid4{grid-template-columns:1fr}}
 .gf-opt{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px;color:rgba(255,255,255,.9);font-family:var(--sans);font-size:.83rem;cursor:pointer;text-align:left;transition:all .18s;-webkit-tap-highlight-color:transparent;width:100%}
 .gf-opt:hover:not(:disabled){background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.35);transform:translateY(-1px)}
 .gf-opt:disabled{pointer-events:none}
@@ -285,21 +226,8 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .gf-opt.wrong{background:rgba(192,57,43,.22);border-color:#e74c3c;color:#f1948a}
 .gf-opt.reveal{background:rgba(90,173,110,.1);border-color:rgba(90,173,110,.3)}
 .gf-opt.neutral{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);pointer-events:none}
-
-/* Drag-rank */
-.gf-rank-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.gf-rank-item{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 14px;color:rgba(255,255,255,.9);font-size:.83rem;cursor:grab;display:flex;align-items:center;gap:10px;transition:all .2s;touch-action:none}
-.gf-rank-item.dragging{opacity:.5;transform:scale(.97)}
-.gf-rank-item.drag-over{border-color:#ffc83c;background:rgba(255,200,60,.1)}
-.gf-rank-handle{opacity:.5;font-size:.9rem;flex-shrink:0}
-.gf-rank-submit{margin-top:8px;background:rgba(90,173,110,.3);border:1.5px solid #5aad6e;border-radius:8px;padding:10px 20px;color:#a8e6b0;font-family:var(--sans);font-size:.82rem;cursor:pointer;transition:all .2s;width:100%}
-.gf-rank-submit:hover{background:rgba(90,173,110,.5)}
-
-/* Feedback */
 .gf-feedback{min-height:20px;font-family:var(--serif);font-style:italic;font-size:.88rem;color:rgba(255,255,255,.8);transition:opacity .3s;padding:0 2px}
 .gf-streak-banner{text-align:center;font-family:var(--serif);font-size:1rem;color:#ffc83c;font-style:italic;min-height:24px;transition:opacity .3s}
-
-/* Result */
 .gf-garden-result{display:none;text-align:center;padding:32px 16px}
 .gf-garden-result.show{display:block}
 .gf-garden-emoji-row{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;min-height:48px}
@@ -312,7 +240,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .gf-play-again{background:rgba(90,173,110,.3);border:1.5px solid #5aad6e;border-radius:8px;padding:12px 28px;color:#a8e6b0;font-family:var(--sans);font-size:.85rem;cursor:pointer;transition:all .2s}
 .gf-play-again:hover{background:rgba(90,173,110,.5)}
 
-/* CAROUSEL */
 #album{background:var(--off-white);padding:80px 24px}
 .album-inner{max-width:960px;margin:0 auto}
 .carousel-stage{position:relative;width:100%;height:min(520px,90vw);margin-top:40px;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -327,7 +254,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .carousel-pause-btn{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);background:none;border:1.5px solid var(--border);border-radius:20px;padding:6px 16px;font-size:.72rem;color:var(--grey);cursor:pointer;letter-spacing:.06em;transition:border-color .2s,color .2s}
 .carousel-pause-btn:hover{border-color:var(--royal-light);color:var(--royal)}
 
-/* LETTER MODAL */
 .letter-popup-modal{position:fixed;inset:0;background:rgba(14,36,72,.6);backdrop-filter:blur(8px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .4s}
 .letter-popup-modal.active{opacity:1;pointer-events:all}
 .letter-popup-paper{background:#fffcf7;background-image:linear-gradient(rgba(220,230,240,.15) 1px,transparent 1px);background-size:100% 24px;border-radius:12px;box-shadow:0 20px 50px rgba(10,25,50,.3);width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:40px 36px;position:relative;transform:translateY(30px) scale(.95);transition:transform .5s var(--ease);border:1px solid #f2eade}
@@ -337,7 +263,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .letter-popup-hdr{font-family:var(--serif);font-size:2rem;color:var(--royal);margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:8px;font-style:italic}
 .letter-popup-txt{font-family:var(--serif);font-size:1.3rem;line-height:1.8;color:#333;white-space:pre-wrap;font-style:italic}
 
-/* TREASURE */
 .tr-overlay{position:fixed;inset:0;background:rgba(8,20,50,.85);backdrop-filter:blur(6px);z-index:20000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;opacity:0;pointer-events:none;transition:opacity .5s}
 .tr-overlay.show{opacity:1;pointer-events:all}
 .tr-chest-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -366,7 +291,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;animation:confettiFall var(--cd,2.5s) ease-in forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
-/* QUIZ PERFECT SCORE */
 .quiz-perfect-overlay{position:fixed;inset:0;z-index:50000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,25,60,.65);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .6s}
 .quiz-perfect-overlay.show{opacity:1;pointer-events:all}
 .quiz-perfect-card{background:linear-gradient(135deg,#fffcf7 0%,#f0f6ff 100%);border:1px solid #e0d0f5;border-radius:20px;padding:48px 36px 40px;max-width:420px;width:100%;text-align:center;transform:translateY(24px) scale(.96);transition:transform .7s var(--ease)}
@@ -381,7 +305,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 </head>
 <body>
 
-<!-- SCREEN 1: GRADES -->
 <div id="screen-grades" class="screen active">
   <div class="portal-header">
     <div class="logo">UniPortal — Student Information System</div>
@@ -415,7 +338,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
   <div class="countdown-bar"><div class="countdown-bar-fill" id="countdown-fill"></div></div>
 </div>
 
-<!-- SCREEN 2: PASSWORD -->
 <div id="screen-password" class="screen">
   <div class="portal-header">
     <div class="logo">UniPortal — Student Information System</div>
@@ -448,7 +370,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
   </div>
 </div>
 
-<!-- SCREEN 3: MAIN SITE -->
 <div id="screen-main" class="screen">
   <nav class="site-nav">
     <div class="brand">First Anniversary</div>
@@ -523,36 +444,19 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
     </div>
   </section>
 
-  <!-- GREEN FLAGS GAME — Redesigned -->
   <section id="greenflags">
     <div class="gf-inner">
       <div class="section-label">Our green flags</div>
       <h2 class="section-title">Growing our garden together</h2>
       <div class="section-divider"></div>
       <p class="gf-desc">Four challenge types, limited time, and only 3 lives. Identify green flags, sort behaviors, complete the statements, and rank what matters. Each correct answer plants a flower. 🌱</p>
-
-      <!-- Mode select -->
       <div id="gf-mode-area">
         <div class="gf-mode-select">
-          <button class="gf-mode-btn" data-mode="easy">
-            <span class="gf-mode-icon">🌱</span>
-            <span class="gf-mode-name">Easy</span>
-            <span class="gf-mode-desc">20s per round · 3 lives · 10 rounds</span>
-          </button>
-          <button class="gf-mode-btn" data-mode="medium">
-            <span class="gf-mode-icon">🌷</span>
-            <span class="gf-mode-name">Medium</span>
-            <span class="gf-mode-desc">12s per round · 3 lives · 12 rounds</span>
-          </button>
-          <button class="gf-mode-btn" data-mode="hard">
-            <span class="gf-mode-icon">🔥</span>
-            <span class="gf-mode-name">Hard</span>
-            <span class="gf-mode-desc">8s per round · 2 lives · 15 rounds</span>
-          </button>
+          <button class="gf-mode-btn" data-mode="easy"><span class="gf-mode-icon">🌱</span><span class="gf-mode-name">Easy</span><span class="gf-mode-desc">20s per round · 3 lives · 10 rounds</span></button>
+          <button class="gf-mode-btn" data-mode="medium"><span class="gf-mode-icon">🌷</span><span class="gf-mode-name">Medium</span><span class="gf-mode-desc">12s per round · 3 lives · 12 rounds</span></button>
+          <button class="gf-mode-btn" data-mode="hard"><span class="gf-mode-icon">🔥</span><span class="gf-mode-name">Hard</span><span class="gf-mode-desc">8s per round · 2 lives · 15 rounds</span></button>
         </div>
       </div>
-
-      <!-- Game HUD + arena -->
       <div id="gf-game-wrap" style="display:none">
         <div class="gf-hud">
           <div class="gf-hud-box"><div class="gf-hud-label">Score</div><div class="gf-hud-value" id="gf-score">0</div></div>
@@ -567,8 +471,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
         <div class="gf-streak-banner" id="gf-streak-banner"></div>
         <div id="gf-game-area"></div>
       </div>
-
-      <!-- Result -->
       <div class="gf-garden-result" id="gf-garden-result">
         <div class="gf-garden-emoji-row" id="gf-garden-row"></div>
         <div class="gf-result-title" id="gf-result-title"></div>
@@ -600,7 +502,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
   </footer>
 </div>
 
-<!-- QUIZ PERFECT SCORE OVERLAY -->
 <div class="quiz-perfect-overlay" id="quiz-perfect-overlay">
   <div class="quiz-perfect-card">
     <span class="quiz-perfect-tulip">🌷</span>
@@ -609,7 +510,6 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
     <button class="quiz-perfect-close" id="quiz-perfect-close">Thank you 🌷</button>
   </div>
 </div>
-
 
 <div class="tr-overlay" id="tr-overlay">
   <div class="tr-chest-wrap" id="tr-stage1">
@@ -689,7 +589,7 @@ const WS_GRID=[
   ['J','B','Y','C','T','E','N','H','N','K','K','H','U','J'],
   ['E','C','V','E','E','E','N','I','Q','I','O','R','L','C'],
   ['R','J','N','T','N','R','C','C','D','N','L','J','N','N'],
-  ['T','C','P','E','A','A','I','U','E','D','F','O','E','J'],
+  ['Y','C','P','E','A','A','I','U','E','D','F','O','E','J'],
   ['Y','B','S','F','T','H','W','T','Z','N','M','P','S','L'],
   ['Y','S','M','I','T','W','T','A','Y','E','M','Y','S','E'],
   ['C','U','T','E','N','E','S','S','S','S','N','J','W','R'],
@@ -705,7 +605,6 @@ const WS_COORDS={
   prettiness:[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9]],
   sincerity:[[3,0],[4,1],[5,2],[6,3],[7,4],[8,5],[9,6],[10,7],[11,8]],
 };
-
 const MG_PAIRS=[
   {q:'When we first talked',a:'May 17, 2025',emoji:'💬'},
   {q:'Our anniversary date',a:'June 8',emoji:'❤️'},
@@ -718,8 +617,9 @@ const MG_PAIRS=[
 ];
 const TR_LETTER=`It took patience, memory, and heart to find every single piece — and that's exactly how I'd describe you.\n\nYou hold onto the details that matter: the dates, the little things, the moments most people would let slip away. The way you remember makes me feel truly seen, truly known, and so deeply loved.\n\nI made this game not just to challenge you, but to remind you of everything we've built together — one small, perfect moment at a time. Every pair you matched is a real piece of our story, and every one of those pieces lives in me.\n\nThank you for playing, for remembering, and most of all — for being the person I get to make all these memories with.\n\nHappy first anniversary, baby ko. I love you beyond all beyonds. 🌷`;
 
-// 20 green-flag questions (harder, researched from healthy relationship guides)
+// ── 30 GREEN FLAG QUESTIONS (20 original + 10 new harder ones) ────────────────
 const GF_IDENTIFY=[
+  // Original 20
   {text:'We talk openly and honestly, even when it\'s uncomfortable',correct:'green',explanation:'Honest communication, even when hard, builds real trust.'},
   {text:'We keep score of each other\'s mistakes during arguments',correct:'red',explanation:'Scorekeeping creates resentment. Healthy partners let go and move forward.'},
   {text:'We respect each other\'s boundaries without needing an explanation',correct:'green',explanation:'Respecting boundaries without demanding reasons shows deep trust.'},
@@ -740,7 +640,19 @@ const GF_IDENTIFY=[
   {text:'We dismiss each other\'s concerns as "overreacting" or being "too sensitive"',correct:'red',explanation:'Invalidating feelings is a form of emotional dismissal and gaslighting.'},
   {text:'We grow individually and support each other\'s personal development',correct:'green',explanation:'Partners who grow together and separately build a stronger bond.'},
   {text:'We make each other feel guilty for prioritizing self-care or rest',correct:'red',explanation:'Healthy love encourages each other\'s wellbeing, including rest and care.'},
+  // 10 New harder questions (based on Gottman Institute & relationship psychology research)
+  {text:'We mock or eye-roll at each other\'s opinions, even lightly and "jokingly"',correct:'red',explanation:'Contempt — including subtle mockery — is the single strongest Gottman predictor of relationship breakdown.'},
+  {text:'We are able to disagree without one person\'s character being attacked',correct:'green',explanation:'Gottman research shows criticizing character (not behavior) is one of the Four Horsemen that destroys relationships.'},
+  {text:'When one of us is upset, the other deflects by listing their own grievances instead',correct:'red',explanation:'This is defensiveness — a Gottman "Horseman" that blocks repair and keeps conflicts unresolved.'},
+  {text:'We notice and respond to each other\'s small bids for connection throughout the day',correct:'green',explanation:'Gottman\'s research found couples who "turn toward" small bids (a smile, a comment) stay together far more often.'},
+  {text:'We stay calm enough during conflict to actually hear what our partner is saying',correct:'green',explanation:'Physiological self-regulation during conflict is a key marker of relationship health in psychology research.'},
+  {text:'We sometimes go completely silent and stop engaging mid-conflict without explanation',correct:'red',explanation:'Stonewalling — total emotional withdrawal — is a Gottman "Horseman" that signals emotional flooding and shutdown.'},
+  {text:'We share our positive news with each other and respond enthusiastically to it',correct:'green',explanation:'Active constructive responding to good news predicts relationship satisfaction as strongly as conflict resolution does.'},
+  {text:'We present a curated version of ourselves, hiding flaws to seem easier to love',correct:'red',explanation:'Attachment research (2024) shows strategic self-curation breeds avoidance and erodes genuine intimacy over time.'},
+  {text:'We feel free to tell each other about a mistake we made without fear of judgment',correct:'green',explanation:'Psychological safety — the freedom to be imperfect — is foundational to secure attachment and lasting trust.'},
+  {text:'We avoid discussing the future of our relationship to keep things comfortable',correct:'red',explanation:'Avoiding future-talk signals fear of commitment or mismatched expectations — both undermine long-term security.'},
 ];
+
 const GF_SORT=[
   {text:'Saying "I need some time to think before I respond"',greenFlag:true,why:'Pausing before reacting shows emotional maturity and self-awareness.'},
   {text:'Checking in after a fight to make sure your partner is okay',greenFlag:true,why:'Following up after conflict shows care and accountability.'},
@@ -762,19 +674,12 @@ const GF_COMPLETE=[
 const GF_FLOWERS=['🌷','🌸','🌺','🌻','🌼','💐','🪷','🌹'];
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
 document.addEventListener('DOMContentLoaded',()=>{
-  setupGrades();
-  setupPassword();
-  setupQuiz();
-  setupWordSearch();
-  setupMemoryGame();
-  setupGreenFlags();
-  setupCarousel();
-  setupEnvelopes();
+  setupGrades();setupPassword();setupQuiz();setupWordSearch();
+  setupMemoryGame();setupGreenFlags();setupCarousel();setupEnvelopes();
 });
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-const $=id=>document.getElementById(id);
 function switchScreen(from,to){
   const f=$(from),t=$(to);
   if(to==='screen-main'){
@@ -791,7 +696,6 @@ function switchScreen(from,to){
   }
 }
 
-// ── GRADES ────────────────────────────────────────────────────────────────────
 function setupGrades(){
   const tb=$('grades-tbody');
   GRADES.forEach(g=>{
@@ -806,7 +710,6 @@ function setupGrades(){
   setTimeout(()=>switchScreen('screen-grades','screen-password'),10000);
 }
 
-// ── PASSWORD ──────────────────────────────────────────────────────────────────
 function setupPassword(){
   const btn=$('pw-btn'),input=$('pw-input'),err=$('pw-error'),eyeBtn=$('pw-eye-btn'),
     eo=$('eye-open'),ec=$('eye-closed');
@@ -822,7 +725,6 @@ function setupPassword(){
   input.addEventListener('keydown',e=>{if(e.key==='Enter')check();});
 }
 
-// ── QUIZ ──────────────────────────────────────────────────────────────────────
 function setupQuiz(){
   let idx=0,score=0;
   const prog=$('quiz-progress'),card=$('quiz-card');
@@ -853,27 +755,18 @@ function setupQuiz(){
       <div class="score-msg">${score===QUIZ.length?'Perfect! You remember everything perfectly ❤️':'Beautifully done! You know us so well! 😊'}</div>
       <button class="quiz-restart">Try Again</button></div>`;
     card.classList.remove('exiting');
-    if(score===QUIZ.length){
-      setTimeout(()=>{
-        const ov=$('quiz-perfect-overlay');ov.classList.add('show');
-        confettiBurst();
-      },400);
-    }
+    if(score===QUIZ.length)setTimeout(()=>{$('quiz-perfect-overlay').classList.add('show');confettiBurst();},400);
     card.querySelector('.quiz-restart').addEventListener('click',()=>{card.classList.add('exiting');setTimeout(()=>{idx=0;score=0;initDots();render();},350);});
   }
   $('quiz-perfect-close').addEventListener('click',()=>$('quiz-perfect-overlay').classList.remove('show'));
   initDots();render();
 }
 
-// ── WORD SEARCH ───────────────────────────────────────────────────────────────
 let wsFound=0;
 const wsUnlocked=[false,false,false,false];
 function setupWordSearch(){
   const grid=$('ws-grid'),list=$('ws-word-list');
-  WS_WORDS.forEach(w=>{
-    const li=document.createElement('li');li.className='ws-word-item';li.id=`wsw-${w}`;li.textContent=w;list.appendChild(li);
-  });
-  // Build cells with inner div for the padding-bottom square trick
+  WS_WORDS.forEach(w=>{const li=document.createElement('li');li.className='ws-word-item';li.id=`wsw-${w}`;li.textContent=w;list.appendChild(li);});
   for(let r=0;r<14;r++)for(let c=0;c<14;c++){
     const cell=document.createElement('div');cell.className='ws-cell';cell.dataset.r=r;cell.dataset.c=c;
     const inner=document.createElement('div');inner.className='ws-cell-inner';inner.textContent=WS_GRID[r][c];
@@ -902,17 +795,15 @@ function setupWordSearch(){
         const ti=WS_WORDS.indexOf(mw);
         const ce=$('ws-compliment');ce.textContent=COMPLIMENTS[ti];ce.classList.add('show');
         wsFound++;
-        [2,4,6,8].forEach((thr,i)=>{
-          if(wsFound>=thr&&!wsUnlocked[i]){wsUnlocked[i]=true;unlockEnvelope(i);}
-        });
+        [2,4,6,8].forEach((thr,i)=>{if(wsFound>=thr&&!wsUnlocked[i]){wsUnlocked[i]=true;unlockEnvelope(i);}});
         if(wsFound===WS_WORDS.length){$('ws-celebrate').classList.add('show');confettiBurst();}
       }
     }
   }
   function unlockEnvelope(i){
     const row=$(`env-track-${i}`);
-    row.classList.add('unlocked');row.querySelector('.envelope-icon-view').textContent='✉️';row.querySelector('.env-label').textContent='✦ Tap to Open ✦';
-    confettiBurstSmall();
+    row.classList.add('unlocked');row.querySelector('.envelope-icon-view').textContent='✉️';
+    row.querySelector('.env-label').textContent='✦ Tap to Open ✦';confettiBurstSmall();
   }
   grid.addEventListener('mousedown',e=>{const co=getCell(e.target);if(!co)return;sel=true;sr=+co.dataset.r;sc=+co.dataset.c;highlight(sr,sc,sr,sc);});
   grid.addEventListener('mousemove',e=>{if(!sel)return;const co=getCell(e.target);if(co)highlight(sr,sc,+co.dataset.r,+co.dataset.c);});
@@ -929,7 +820,6 @@ function setupWordSearch(){
   grid.addEventListener('touchend',()=>{if(!sel)return;sel=false;checkSel();clearSel();});
 }
 
-// ── MEMORY GAME ───────────────────────────────────────────────────────────────
 function setupMemoryGame(){
   let moves=0,found=0,first=null,lock=false,timer=null,elapsed=0,started=false;
   const grid=$('mg-grid');
@@ -962,24 +852,17 @@ function setupMemoryGame(){
     [...MG_PAIRS,...MG_PAIRS].map((p,i)=>({...p,id:i,type:i<MG_PAIRS.length?'q':'a'}))
       .sort(()=>Math.random()-.5).forEach(p=>grid.appendChild(buildCard(p)));
   }
-  // Both "Play Again" buttons call init
   $('mg-restart').addEventListener('click',init);
   $('tr-play-again').addEventListener('click',()=>{
     $('tr-overlay').classList.remove('show');
-    // reset overlay state
-    setTimeout(()=>{
-      $('tr-stage1').style.display='';$('tr-letter').style.display='none';
-      $('tr-letter').classList.remove('reveal');$('tr-chest').textContent='🎁';$('tr-chest').classList.remove('open');
-    },500);
+    setTimeout(()=>{$('tr-stage1').style.display='';$('tr-letter').style.display='none';$('tr-letter').classList.remove('reveal');$('tr-chest').textContent='🎁';$('tr-chest').classList.remove('open');},500);
     init();
   });
   init();
 }
 
-// ── TREASURE REVEAL ───────────────────────────────────────────────────────────
 function showTreasure(){
-  const overlay=$('tr-overlay'),chest=$('tr-chest');
-  const s1=$('tr-stage1'),letter=$('tr-letter');
+  const overlay=$('tr-overlay'),chest=$('tr-chest'),s1=$('tr-stage1'),letter=$('tr-letter');
   overlay.classList.add('show');
   for(let i=0;i<12;i++){
     const sp=document.createElement('div');sp.className='tr-sparkle';
@@ -1010,19 +893,15 @@ function showTreasure(){
   overlay.addEventListener('click',e=>{if(e.target===overlay)closeOverlay();},{once:true});
 }
 
-// ── GREEN FLAGS GAME — Redesigned ────────────────────────────────────────────
 function setupGreenFlags(){
   const MODES={easy:{time:20,lives:3,rounds:10},medium:{time:12,lives:3,rounds:12},hard:{time:8,lives:2,rounds:15}};
   let mode,cfg,score,lives,combo,round,totalRounds,answered,timerInterval,timeLeft,roundLog,pendingRound;
 
-  // Mode selection
   document.querySelectorAll('.gf-mode-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.gf-mode-btn').forEach(b=>b.classList.remove('selected'));
-      btn.classList.add('selected');
-      mode=btn.dataset.mode;
-      $('gf-mode-area').style.display='none';
-      $('gf-game-wrap').style.display='block';
+      btn.classList.add('selected');mode=btn.dataset.mode;
+      $('gf-mode-area').style.display='none';$('gf-game-wrap').style.display='block';
       $('gf-garden-result').classList.remove('show');$('gf-garden-result').style.display='none';
       startGame();
     });
@@ -1034,13 +913,11 @@ function setupGreenFlags(){
 
   function startGame(){
     cfg=MODES[mode];score=0;lives=cfg.lives;combo=1;round=0;totalRounds=cfg.rounds;answered=false;roundLog=[];
-    pendingRound=buildRoundQueue();
-    updateHUD();nextRound();
+    pendingRound=buildRoundQueue();updateHUD();nextRound();
   }
 
   function buildRoundQueue(){
-    const q=[];
-    const shuf=a=>[...a].sort(()=>Math.random()-.5);
+    const q=[],shuf=a=>[...a].sort(()=>Math.random()-.5);
     const types=shuf([0,1,2,0,1,2,0,1,2,0,1,2,0,1,2]).slice(0,totalRounds);
     const pi=shuf(GF_IDENTIFY),ps=shuf(GF_SORT),pc=shuf(GF_COMPLETE);
     let ii=0,si=0,ci=0;
@@ -1053,8 +930,7 @@ function setupGreenFlags(){
   }
 
   function updateHUD(){
-    $('gf-score').textContent=score;
-    $('gf-round').textContent=`${Math.min(round,totalRounds)}/${totalRounds}`;
+    $('gf-score').textContent=score;$('gf-round').textContent=`${Math.min(round,totalRounds)}/${totalRounds}`;
     $('gf-combo').textContent=`x${combo}`;
     const lw=$('gf-lives');lw.innerHTML='';
     for(let i=0;i<cfg.lives;i++){const h=document.createElement('span');h.className='gf-heart'+(i>=lives?' lost':'');h.textContent='❤️';lw.appendChild(h);}
@@ -1079,10 +955,7 @@ function setupGreenFlags(){
   function nextRound(){
     if(round>=totalRounds||lives<=0){showResult();return;}
     const rnd=pendingRound[round];round++;answered=false;
-    $('gf-streak-banner').style.opacity='0';
-    updateHUD();
-    renderRound(rnd);
-    startTimer();
+    $('gf-streak-banner').style.opacity='0';updateHUD();renderRound(rnd);startTimer();
   }
 
   function renderRound(rnd){
@@ -1094,15 +967,13 @@ function setupGreenFlags(){
     meta.innerHTML=`<span class="gf-round-type ${typeClass[rnd.type]}">${typeLabels[rnd.type]}</span>${combo>1?`<span class="gf-combo-badge">🔥 ${combo}x Combo!</span>`:''}`;
     card.appendChild(meta);
     const sc=document.createElement('div');sc.className='gf-scenario';
-    if(rnd.type==='complete'){sc.textContent=rnd.data.stem;}
-    else{sc.textContent='"'+rnd.data.text+'"';}
+    sc.textContent=rnd.type==='complete'?rnd.data.stem:'"'+rnd.data.text+'"';
     card.appendChild(sc);
     if(rnd.type==='identify'||rnd.type==='sort'){
       const isIdentify=rnd.type==='identify';
       const ch=document.createElement('div');ch.className='gf-choices grid2';
       const correctVal=isIdentify?rnd.data.correct:rnd.data.greenFlag;
-      const opts=isIdentify?
-        [{label:'🌿 Green Flag',val:'green'},{label:'🚩 Red Flag',val:'red'}]:
+      const opts=isIdentify?[{label:'🌿 Green Flag',val:'green'},{label:'🚩 Red Flag',val:'red'}]:
         [{label:'🌿 Green Flag',val:true},{label:'🚩 Red Flag',val:false}];
       const correctIdx=correctVal===opts[0].val?0:1;
       const explanation=isIdentify?rnd.data.explanation:rnd.data.why;
@@ -1112,7 +983,7 @@ function setupGreenFlags(){
         ch.appendChild(b);
       });
       card.appendChild(ch);
-    } else {
+    }else{
       const ch=document.createElement('div');ch.className='gf-choices';
       rnd.data.options.forEach((opt,i)=>{
         const b=document.createElement('button');b.className='gf-opt';b.textContent=opt;
@@ -1127,34 +998,31 @@ function setupGreenFlags(){
 
   function handleAnswer(isCorrect,type,explanation,clickedBtn,allBtns,correctIdx){
     if(answered)return;answered=true;clearInterval(timerInterval);
-    if(isCorrect===null){// timeout
+    if(isCorrect===null){
       score=Math.max(0,score);combo=1;lives--;
       const fb=$('gf-game-area').querySelector('.gf-feedback');
       if(fb)fb.textContent="⏰ Time's up! "+(explanation||'');
-    } else if(isCorrect){
+    }else if(isCorrect){
       const pts=10*combo;score+=pts;combo=Math.min(combo+1,5);
       if(clickedBtn)clickedBtn.classList.add('correct');
       if(allBtns&&correctIdx!=null)allBtns.forEach((b,i)=>{if(i!==correctIdx)b.classList.add('neutral');});
       const fb=$('gf-game-area').querySelector('.gf-feedback');
       if(fb)fb.textContent=`✅ +${pts} pts! `+(explanation||'');
       if(combo>2){$('gf-streak-banner').textContent=`🔥 ${combo-1}x Combo! Keep going!`;$('gf-streak-banner').style.opacity='1';}
-    } else {
+    }else{
       combo=1;lives=Math.max(0,lives-1);
       if(clickedBtn)clickedBtn.classList.add('wrong');
       if(allBtns&&correctIdx!=null)allBtns[correctIdx].classList.add('correct');
       const fb=$('gf-game-area').querySelector('.gf-feedback');
       if(fb)fb.textContent=`❌ `+(explanation||'');
     }
-    roundLog.push({correct:!!isCorrect});
-    updateHUD();
+    roundLog.push({correct:!!isCorrect});updateHUD();
     if(allBtns)allBtns.forEach(b=>b.disabled=true);
-    const delay=lives===0?900:1800;
-    setTimeout(()=>lives<=0||round>=totalRounds?showResult():nextRound(),delay);
+    setTimeout(()=>lives<=0||round>=totalRounds?showResult():nextRound(),lives===0?900:1800);
   }
 
   function showResult(){
-    clearInterval(timerInterval);
-    $('gf-game-wrap').style.display='none';
+    clearInterval(timerInterval);$('gf-game-wrap').style.display='none';
     const result=$('gf-garden-result');result.classList.add('show');result.style.display='block';
     const row=$('gf-garden-row');row.innerHTML='';
     const correctCount=roundLog.filter(r=>r.correct).length;
@@ -1169,7 +1037,6 @@ function setupGreenFlags(){
   }
 }
 
-// ── ENVELOPES ─────────────────────────────────────────────────────────────────
 function setupEnvelopes(){
   const modal=$('letter-modal');
   document.querySelectorAll('.envelope-track-item').forEach(row=>{
@@ -1186,7 +1053,6 @@ function setupEnvelopes(){
   modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('active');});
 }
 
-// ── CAROUSEL ──────────────────────────────────────────────────────────────────
 function setupCarousel(){
   const track=$('carousel-track'),pauseBtn=$('carousel-pause-btn');
   const COUNT=12,SPEED=0.012;
@@ -1212,11 +1078,9 @@ function setupCarousel(){
   pauseBtn.addEventListener('click',()=>{paused=!paused;last=null;pauseBtn.textContent=paused?'▶ Resume':'⏸ Pause';});
 }
 
-// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
 let lbIdx=0;
 function openLightbox(i){
-  lbIdx=i;
-  let lb=$('lb');
+  lbIdx=i;let lb=$('lb');
   if(!lb){
     lb=document.createElement('div');lb.id='lb';
     lb.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(5,15,35,.96);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out';
@@ -1242,7 +1106,6 @@ function openLightbox(i){
 function updateLb(){const p=PHOTOS[lbIdx];$('lb-img').src=p.src;$('lb-cap').textContent=`${p.label} · ${lbIdx+1}/${PHOTOS.length}`;}
 function closeLb(){$('lb').style.display='none';document.body.style.overflow='';}
 
-// ── CONFETTI ──────────────────────────────────────────────────────────────────
 function confetti(n,x,y){
   const cols=['#1a3a6b','#3b6fc9','#c97e85','#e8b4b8','#f7f9fc','#ffd700'];
   for(let i=0;i<n;i++){
