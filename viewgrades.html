@@ -208,8 +208,8 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .mg-stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
 .mg-stat{background:var(--off-white);border:1px solid var(--border);border-radius:8px;padding:10px 20px;font-size:.82rem;color:var(--grey)}
 .mg-stat strong{display:block;font-size:1.2rem;color:var(--royal);font-family:var(--serif)}
-.mg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-@media(max-width:480px){.mg-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+.mg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:400px){.mg-grid{gap:5px}}
 .mg-card{perspective:600px;aspect-ratio:3/4;cursor:pointer}
 .mg-card-inner{position:relative;width:100%;height:100%;transition:transform .45s var(--ease);transform-style:preserve-3d}
 .mg-card.flipped .mg-card-inner,.mg-card.matched .mg-card-inner{transform:rotateY(180deg)}
@@ -218,9 +218,10 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .mg-back-icon{font-size:1.6rem;opacity:.5}
 .mg-front{background:var(--white);border:2px solid var(--border);transform:rotateY(180deg)}
 .mg-card.matched .mg-front{border-color:var(--tulip-rose);background:#fff5f6}
-.mg-front .mg-emoji{font-size:1.5rem;margin-bottom:6px}
-.mg-front .mg-q{font-size:.65rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:4px}
-.mg-front .mg-a{font-family:var(--serif);font-size:.9rem;color:var(--royal);line-height:1.3;font-style:italic}
+.mg-front .mg-emoji{font-size:1.2rem;margin-bottom:4px}
+.mg-front .mg-q{font-size:.58rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:3px}
+.mg-front .mg-a{font-family:var(--serif);font-size:.78rem;color:var(--royal);line-height:1.25;font-style:italic}
+@media(max-width:380px){.mg-front .mg-emoji{font-size:1rem}.mg-front .mg-a{font-size:.7rem}}
 .mg-win{text-align:center;padding:24px 20px;display:none}
 .mg-win.show{display:block}
 .mg-bottom-bar{display:flex;justify-content:center;margin-top:20px}
@@ -314,11 +315,11 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 /* CAROUSEL */
 #album{background:var(--off-white);padding:80px 24px}
 .album-inner{max-width:960px;margin:0 auto}
-.carousel-stage{position:relative;width:100%;height:520px;margin-top:40px;display:flex;align-items:center;justify-content:center}
-.carousel-track{position:relative;width:340px;height:340px}
+.carousel-stage{position:relative;width:100%;height:min(520px,90vw);margin-top:40px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.carousel-track{position:relative;width:min(340px,70vw);height:min(340px,70vw)}
 .tulip-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5rem;z-index:10;animation:tulipBob 3s ease-in-out infinite;filter:drop-shadow(0 6px 18px rgba(201,126,133,.35));pointer-events:none;user-select:none}
 @keyframes tulipBob{0%,100%{transform:translate(-50%,-50%) scale(1) rotate(-2deg)}50%{transform:translate(-50%,-50%) scale(1.06) rotate(2deg)}}
-.carousel-item{position:absolute;width:96px;height:96px;top:50%;left:50%;border-radius:12px;overflow:hidden;cursor:pointer;border:3px solid var(--white);box-shadow:0 4px 18px rgba(26,58,107,.18);transition:box-shadow .3s,border-color .3s;background:var(--royal-pale)}
+.carousel-item{position:absolute;width:min(96px,18vw);height:min(96px,18vw);top:50%;left:50%;border-radius:12px;overflow:hidden;cursor:pointer;border:3px solid var(--white);box-shadow:0 4px 18px rgba(26,58,107,.18);transition:box-shadow .3s,border-color .3s;background:var(--royal-pale)}
 .carousel-item:hover{border-color:var(--tulip-pink);box-shadow:0 8px 28px rgba(201,126,133,.4);z-index:20}
 .carousel-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .ci-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--royal-light);font-size:.6rem;letter-spacing:.08em}
@@ -364,6 +365,18 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
 .site-footer strong{color:var(--white);font-weight:500}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;animation:confettiFall var(--cd,2.5s) ease-in forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* QUIZ PERFECT SCORE */
+.quiz-perfect-overlay{position:fixed;inset:0;z-index:50000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,25,60,.65);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .6s}
+.quiz-perfect-overlay.show{opacity:1;pointer-events:all}
+.quiz-perfect-card{background:linear-gradient(135deg,#fffcf7 0%,#f0f6ff 100%);border:1px solid #e0d0f5;border-radius:20px;padding:48px 36px 40px;max-width:420px;width:100%;text-align:center;transform:translateY(24px) scale(.96);transition:transform .7s var(--ease)}
+.quiz-perfect-overlay.show .quiz-perfect-card{transform:none}
+.quiz-perfect-tulip{font-size:3rem;display:block;margin-bottom:16px;animation:tulipSway 3s ease-in-out infinite}
+@keyframes tulipSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.quiz-perfect-title{font-family:var(--serif);font-size:1.7rem;color:var(--royal);font-style:italic;margin-bottom:14px;line-height:1.2}
+.quiz-perfect-body{font-family:var(--serif);font-size:1.05rem;color:#444;line-height:1.85;font-style:italic;margin-bottom:28px}
+.quiz-perfect-close{background:var(--royal);border:none;border-radius:8px;padding:12px 28px;color:var(--white);font-family:var(--sans);font-size:.85rem;cursor:pointer;transition:background .2s}
+.quiz-perfect-close:hover{background:var(--royal-mid)}
 </style>
 </head>
 <body>
@@ -504,7 +517,7 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
       </div>
       <div class="mg-grid" id="mg-grid"></div>
       <div class="mg-win" id="mg-win"><p style="font-family:var(--serif);font-style:italic;color:var(--royal);font-size:1.1rem;margin-bottom:12px">You matched everything perfectly! 🌷</p></div>
-      <div class="mg-bottom-bar">
+      <div class="mg-bottom-bar" id="mg-bottom-bar" style="display:none">
         <button class="mg-restart-btn" id="mg-restart">🔄 Play Again</button>
       </div>
     </div>
@@ -587,7 +600,17 @@ body{font-family:var(--sans);background:var(--off-white);color:var(--black);min-
   </footer>
 </div>
 
-<!-- TREASURE OVERLAY -->
+<!-- QUIZ PERFECT SCORE OVERLAY -->
+<div class="quiz-perfect-overlay" id="quiz-perfect-overlay">
+  <div class="quiz-perfect-card">
+    <span class="quiz-perfect-tulip">🌷</span>
+    <div class="quiz-perfect-title">You got them all. Every single one.</div>
+    <p class="quiz-perfect-body">Every date, every detail, every little thing — you remembered them all perfectly. That means you have been paying attention, holding onto us, just like I have.<br><br>Thank you for knowing our story by heart. It means everything to me.</p>
+    <button class="quiz-perfect-close" id="quiz-perfect-close">Thank you 🌷</button>
+  </div>
+</div>
+
+
 <div class="tr-overlay" id="tr-overlay">
   <div class="tr-chest-wrap" id="tr-stage1">
     <div class="tr-chest" id="tr-chest">🎁</div>
@@ -654,33 +677,33 @@ const QUIZ=[
   {q:"What is our theme song?",opts:['Mr. Bean','Hawak mo ang beat','Batang ina','Brazilian Dance'],a:0,fb:'Mr. Bean — tanatantananatantanantan! 🎵'},
 ];
 
-const WS_WORDS=['consistency','patience','kindness','genuineness','faithful','communication','love','honesty'];
-const COMPLIMENTS=['You make loving you the easiest thing in the world. ❤️','Your patience with me is a gift I promise to cherish. 🕊️','Your kindness radiates into everything and everyone around you. ✨','I adore your genuineness; you are perfectly, beautifully you. 🌷','Thank you for being so faithful and true. 🤝','Our communication brings me closer to you every single day. 💬','Love is a small word, but it holds everything I feel for you. 💖','Your honesty is my anchor. I trust you with my whole heart. ⚓'];
+const WS_WORDS=['consistency','patience','kindness','genuineness','faithfulness','cuteness','prettiness','sincerity'];
+const COMPLIMENTS=['You make loving you the easiest thing in the world. ❤️','Your patience with me is a gift I promise to cherish. 🕊️','Your kindness radiates into everything and everyone around you. ✨','I adore your genuineness; you are perfectly, beautifully you. 🌷','Thank you for being so faithful and true to us. 🤝','Your cuteness makes every moment ten times brighter. 🌸','Your prettiness goes far deeper than what anyone can see. 💖','Your sincerity is my anchor. I trust you with my whole heart. ⚓'];
 const WS_GRID=[
-  ['W','J','B','H','S','Y','A','U','Q','H','C','B','N','H'],
-  ['C','S','W','Z','P','G','H','G','P','O','F','G','K','C'],
-  ['P','A','T','I','E','N','C','E','N','L','E','A','O','D'],
-  ['P','K','L','M','V','G','H','S','Q','N','L','M','F','F'],
-  ['H','K','T','F','Q','G','I','K','U','U','M','W','E','Y'],
-  ['Y','P','R','U','V','S','Z','I','F','U','D','N','X','C'],
-  ['J','B','Y','Y','T','J','N','H','N','K','K','H','L','J'],
-  ['E','C','V','E','P','E','T','I','Q','I','O','R','R','C'],
-  ['R','J','N','T','N','I','C','M','D','N','L','J','H','N'],
-  ['T','C','P','E','A','A','R','U','E','D','F','O','W','J'],
-  ['Y','B','S','F','T','H','W','S','Z','N','M','P','V','L'],
-  ['Y','S','M','I','T','W','T','A','B','E','M','Y','X','E'],
-  ['G','R','O','L','R','Y','S','K','S','S','N','J','W','R'],
+  ['P','R','E','T','T','I','N','E','S','S','C','B','F','H'],
+  ['F','W','D','B','F','K','M','B','K','O','F','G','A','C'],
+  ['G','P','B','N','M','M','H','G','N','L','E','A','I','D'],
+  ['S','K','A','M','V','G','H','S','Q','N','L','M','T','F'],
+  ['H','I','T','T','Q','G','I','K','U','U','M','W','H','Y'],
+  ['Y','P','N','U','I','S','Z','I','F','U','D','N','F','C'],
+  ['J','B','Y','C','T','E','N','H','N','K','K','H','U','J'],
+  ['E','C','V','E','E','E','N','I','Q','I','O','R','L','C'],
+  ['R','J','N','T','N','R','C','C','D','N','L','J','N','N'],
+  ['T','C','P','E','A','A','I','U','E','D','F','O','E','J'],
+  ['Y','B','S','F','T','H','W','T','Z','N','M','P','S','L'],
+  ['Y','S','M','I','T','W','T','A','Y','E','M','Y','S','E'],
+  ['C','U','T','E','N','E','S','S','S','S','N','J','W','R'],
   ['G','N','X','H','F','T','G','X','Y','S','M','Q','U','W'],
 ];
 const WS_COORDS={
   consistency:[[0,10],[1,9],[2,8],[3,7],[4,6],[5,5],[6,4],[7,3],[8,2],[9,1],[10,0]],
-  patience:[[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7]],
+  patience:[[2,1],[3,2],[4,3],[5,4],[6,5],[7,6],[8,7],[9,8]],
   kindness:[[6,9],[7,9],[8,9],[9,9],[10,9],[11,9],[12,9],[13,9]],
   genuineness:[[1,11],[2,10],[3,9],[4,8],[5,7],[6,6],[7,5],[8,4],[9,3],[10,2],[11,1]],
-  faithful:[[10,3],[9,4],[8,5],[7,6],[6,7],[5,8],[4,9],[3,10]],
-  communication:[[1,13],[2,12],[3,11],[4,10],[5,9],[6,8],[7,7],[8,6],[9,5],[10,4],[11,3],[12,2],[13,1]],
-  love:[[8,10],[9,11],[10,12],[11,13]],
-  honesty:[[6,11],[7,10],[8,9],[9,8],[10,7],[11,6],[12,5]],
+  faithfulness:[[0,12],[1,12],[2,12],[3,12],[4,12],[5,12],[6,12],[7,12],[8,12],[9,12],[10,12],[11,12]],
+  cuteness:[[12,0],[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7]],
+  prettiness:[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9]],
+  sincerity:[[3,0],[4,1],[5,2],[6,3],[7,4],[8,5],[9,6],[10,7],[11,8]],
 };
 
 const MG_PAIRS=[
@@ -695,40 +718,46 @@ const MG_PAIRS=[
 ];
 const TR_LETTER=`It took patience, memory, and heart to find every single piece — and that's exactly how I'd describe you.\n\nYou hold onto the details that matter: the dates, the little things, the moments most people would let slip away. The way you remember makes me feel truly seen, truly known, and so deeply loved.\n\nI made this game not just to challenge you, but to remind you of everything we've built together — one small, perfect moment at a time. Every pair you matched is a real piece of our story, and every one of those pieces lives in me.\n\nThank you for playing, for remembering, and most of all — for being the person I get to make all these memories with.\n\nHappy first anniversary, baby ko. I love you beyond all beyonds. 🌷`;
 
-// ── GREEN FLAGS DATA — 4 question types ──────────────────────────────────────
+// 20 green-flag questions (harder, researched from healthy relationship guides)
 const GF_IDENTIFY=[
-  {text:'We talk openly and honestly, even when it\'s hard',correct:'green',explanation:'Open communication is the foundation of a healthy relationship.'},
-  {text:'We keep score of each other\'s mistakes in arguments',correct:'red',explanation:'Keeping score creates resentment — real partners let go and move forward.'},
-  {text:'We respect each other\'s personal space and time alone',correct:'green',explanation:'Healthy love trusts each other to have independent time.'},
-  {text:'We check each other\'s phones without permission',correct:'red',explanation:'Trust means not needing to snoop. Privacy is a form of respect.'},
-  {text:'We apologize genuinely and forgive without grudges',correct:'green',explanation:'Real forgiveness heals. Grudges only build walls.'},
-  {text:'We get jealous when the other spends time with friends',correct:'red',explanation:'Jealousy over healthy friendships signals insecurity, not love.'},
-  {text:'We cheer for each other\'s dreams and personal growth',correct:'green',explanation:'A loving partner celebrates your wins as much as their own.'},
-  {text:'We make each other feel guilty for saying no',correct:'red',explanation:'Guilt-tripping is manipulation. Love respects a clear "no."'},
-  {text:'We express love and gratitude in both big and small ways',correct:'green',explanation:'The small gestures — a kind word, a text — are what daily love looks like.'},
-  {text:'We only show affection when we want something in return',correct:'red',explanation:'Conditional love isn\'t love — it\'s a transaction.'},
-  {text:'We keep what\'s between us private and sacred',correct:'green',explanation:'A relationship\'s intimacy is its own protected world.'},
-  {text:'We dismiss each other\'s feelings during disagreements',correct:'red',explanation:'Being heard is one of the deepest human needs. Real love listens.'},
+  {text:'We talk openly and honestly, even when it\'s uncomfortable',correct:'green',explanation:'Honest communication, even when hard, builds real trust.'},
+  {text:'We keep score of each other\'s mistakes during arguments',correct:'red',explanation:'Scorekeeping creates resentment. Healthy partners let go and move forward.'},
+  {text:'We respect each other\'s boundaries without needing an explanation',correct:'green',explanation:'Respecting boundaries without demanding reasons shows deep trust.'},
+  {text:'We check each other\'s phones and social media without asking',correct:'red',explanation:'Surveillance erodes trust. Privacy is a right, not a privilege.'},
+  {text:'We each maintain friendships and interests outside the relationship',correct:'green',explanation:'Healthy partners support each other\'s independence and social lives.'},
+  {text:'We use past mistakes as weapons during current disagreements',correct:'red',explanation:'Bringing up the past to win fights is manipulation, not resolution.'},
+  {text:'We apologize and genuinely change the behavior we apologized for',correct:'green',explanation:'A real apology includes changed behavior, not just words.'},
+  {text:'We isolate each other from family and friends gradually',correct:'red',explanation:'Isolation from support networks is a major warning sign.'},
+  {text:'We take responsibility for our own emotions without blaming each other',correct:'green',explanation:'Emotional ownership prevents toxic cycles of blame.'},
+  {text:'We feel safer hiding our true feelings to avoid conflict',correct:'red',explanation:'Emotional concealment signals an unsafe relationship environment.'},
+  {text:'We celebrate each other\'s individual achievements as our shared wins',correct:'green',explanation:'True partners are each other\'s biggest fans — always.'},
+  {text:'We withhold affection as punishment when we\'re upset',correct:'red',explanation:'Using love as leverage is emotional manipulation.'},
+  {text:'We resolve disagreements by seeking understanding, not winning',correct:'green',explanation:'The goal of a healthy argument is mutual understanding, not victory.'},
+  {text:'We feel anxious or afraid of how our partner will react to bad news',correct:'red',explanation:'Fear of your partner\'s reaction is never a green flag.'},
+  {text:'We give each other space to process emotions before discussing them',correct:'green',explanation:'Emotional space allows both partners to respond thoughtfully, not reactively.'},
+  {text:'We make unilateral decisions that affect both of us without discussing',correct:'red',explanation:'Big decisions in a partnership require mutual input and respect.'},
+  {text:'We express appreciation and gratitude regularly, even for small things',correct:'green',explanation:'Consistent gratitude keeps love visible and partners feeling valued.'},
+  {text:'We dismiss each other\'s concerns as "overreacting" or being "too sensitive"',correct:'red',explanation:'Invalidating feelings is a form of emotional dismissal and gaslighting.'},
+  {text:'We grow individually and support each other\'s personal development',correct:'green',explanation:'Partners who grow together and separately build a stronger bond.'},
+  {text:'We make each other feel guilty for prioritizing self-care or rest',correct:'red',explanation:'Healthy love encourages each other\'s wellbeing, including rest and care.'},
 ];
 const GF_SORT=[
-  {text:'Saying "I\'m fine" when you\'re not, to avoid conflict',greenFlag:false,why:'Avoidance builds resentment. Honest feelings deserve honest words.'},
-  {text:'Checking in with a "how are you feeling?" after a hard day',greenFlag:true,why:'Small check-ins show you\'re always paying attention.'},
-  {text:'Bringing up old arguments as ammunition in new ones',greenFlag:false,why:'Weaponizing the past poisons the present.'},
-  {text:'Saying "thank you" for the small everyday things',greenFlag:true,why:'Gratitude for the mundane keeps appreciation alive.'},
-  {text:'Celebrating each other\'s wins like they\'re your own',greenFlag:true,why:'A true partner is your biggest fan.'},
-  {text:'Keeping secrets from each other "to protect" them',greenFlag:false,why:'Protective secrecy often becomes a trust deficit over time.'},
+  {text:'Saying "I need some time to think before I respond"',greenFlag:true,why:'Pausing before reacting shows emotional maturity and self-awareness.'},
+  {text:'Checking in after a fight to make sure your partner is okay',greenFlag:true,why:'Following up after conflict shows care and accountability.'},
+  {text:'Keeping a mental list of everything your partner has done wrong',greenFlag:false,why:'Mental scorekeeping breeds bitterness and prevents genuine forgiveness.'},
+  {text:'Asking "what do you need from me right now?" when your partner is upset',greenFlag:true,why:'Checking what kind of support is needed shows emotional intelligence.'},
+  {text:'Expecting your partner to always know what you\'re feeling without telling them',greenFlag:false,why:'Mind-reading expectations lead to unnecessary misunderstandings.'},
+  {text:'Planning for the future together and discussing shared goals',greenFlag:true,why:'Building a shared future means you\'re both invested in the relationship.'},
+  {text:'Making jokes that embarrass your partner in front of others',greenFlag:false,why:'Public humiliation, even "as a joke," undermines respect and dignity.'},
+  {text:'Defending your partner\'s character when others speak negatively about them',greenFlag:true,why:'Having each other\'s backs publicly reflects real partnership and loyalty.'},
 ];
 const GF_COMPLETE=[
-  {stem:'A green flag relationship means both partners feel __',options:['judged and monitored','safe, seen, and free','dependent on each other','always agreeing'],correct:1},
-  {stem:'When one partner needs space, the other should __',options:['get worried and call constantly','respect it and trust the relationship','feel rejected and sulk','demand an explanation'],correct:1},
-  {stem:'Disagreements in a healthy relationship are __',options:['signs you\'re incompatible','rare and avoided at all costs','normal and handled with respect','always someone\'s fault'],correct:2},
-  {stem:'Keeping your own hobbies and friendships is __',options:['a sign you don\'t care','disrespectful to your partner','healthy and encouraged','unnecessary when you\'re in love'],correct:2},
-  {stem:'When your partner achieves something great, you feel __',options:['competitive','genuinely happy for them','indifferent','threatened'],correct:1},
-];
-const GF_RANK=[
-  {items:['Trust','Respect','Communication','Affection'],correct:[0,2,1,3],hint:'Which matters most as the foundation?'},
-  {items:['Saying sorry','Meaning it','Changing behavior','Forgiving'],correct:[2,1,0,3],hint:'Rank what makes an apology real'},
-  {items:['Love','Trust','Honesty','Patience'],correct:[1,2,0,3],hint:'What holds a relationship together first?'},
+  {stem:'In a healthy relationship, conflict should result in __',options:['one person winning','deeper understanding','permanent silence','changing the subject'],correct:1},
+  {stem:'When your partner says they need space, you should __',options:['panic and call repeatedly','respect it and check in later','feel rejected and distance yourself','demand an explanation immediately'],correct:1},
+  {stem:'Keeping your own friendships in a relationship is __',options:['a sign of distrust','unnecessary if you love each other','healthy and strongly encouraged','something you should hide'],correct:2},
+  {stem:'A genuine apology always includes __',options:['blaming the other person a little','a changed behavior going forward','a long explanation of why you did it','waiting for the other person to apologize too'],correct:1},
+  {stem:'Feeling afraid to share bad news with your partner signals __',options:['shyness','a communication style difference','a possible red flag in safety','normal relationship anxiety'],correct:2},
+  {stem:'Healthy partners support each other\'s personal goals because __',options:['they have to','individual growth strengthens the relationship','one partner\'s success reflects on the other','they feel guilty otherwise'],correct:1},
 ];
 const GF_FLOWERS=['🌷','🌸','🌺','🌻','🌼','💐','🪷','🌹'];
 
@@ -824,8 +853,15 @@ function setupQuiz(){
       <div class="score-msg">${score===QUIZ.length?'Perfect! You remember everything perfectly ❤️':'Beautifully done! You know us so well! 😊'}</div>
       <button class="quiz-restart">Try Again</button></div>`;
     card.classList.remove('exiting');
+    if(score===QUIZ.length){
+      setTimeout(()=>{
+        const ov=$('quiz-perfect-overlay');ov.classList.add('show');
+        confettiBurst();
+      },400);
+    }
     card.querySelector('.quiz-restart').addEventListener('click',()=>{card.classList.add('exiting');setTimeout(()=>{idx=0;score=0;initDots();render();},350);});
   }
+  $('quiz-perfect-close').addEventListener('click',()=>$('quiz-perfect-overlay').classList.remove('show'));
   initDots();render();
 }
 
@@ -913,7 +949,7 @@ function setupMemoryGame(){
     moves++;updStats();
     if(first.dataset.pair===card.dataset.pair&&first.dataset.type!==card.dataset.type){
       card.classList.add('matched');first.classList.add('matched');first=null;found++;updStats();
-      if(found===MG_PAIRS.length){clearInterval(timer);confettiBurst();$('mg-win').classList.add('show');setTimeout(showTreasure,700);}
+      if(found===MG_PAIRS.length){clearInterval(timer);confettiBurst();$('mg-win').classList.add('show');$('mg-bottom-bar').style.display='flex';setTimeout(showTreasure,700);}
     }else{
       lock=true;const prev=first;first=null;
       setTimeout(()=>{prev.classList.remove('flipped');card.classList.remove('flipped');lock=false;},1000);
@@ -922,7 +958,7 @@ function setupMemoryGame(){
   function init(){
     grid.innerHTML='';moves=0;found=0;first=null;lock=false;elapsed=0;started=false;
     clearInterval(timer);updStats();setStat('mg-time','0s');
-    $('mg-win').classList.remove('show');
+    $('mg-win').classList.remove('show');$('mg-bottom-bar').style.display='none';
     [...MG_PAIRS,...MG_PAIRS].map((p,i)=>({...p,id:i,type:i<MG_PAIRS.length?'q':'a'}))
       .sort(()=>Math.random()-.5).forEach(p=>grid.appendChild(buildCard(p)));
   }
@@ -1004,14 +1040,14 @@ function setupGreenFlags(){
 
   function buildRoundQueue(){
     const q=[];
-    // Mix all 4 types
-    const shuffled=arr=>[...arr].sort(()=>Math.random()-.5);
-    const ids=shuffled([0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]).slice(0,totalRounds);
-    ids.forEach(type=>{
-      if(type===0)q.push({type:'identify',data:shuffled(GF_IDENTIFY)[0]});
-      else if(type===1)q.push({type:'sort',data:shuffled(GF_SORT)[0]});
-      else if(type===2)q.push({type:'complete',data:shuffled(GF_COMPLETE)[0]});
-      else q.push({type:'rank',data:shuffled(GF_RANK)[0]});
+    const shuf=a=>[...a].sort(()=>Math.random()-.5);
+    const types=shuf([0,1,2,0,1,2,0,1,2,0,1,2,0,1,2]).slice(0,totalRounds);
+    const pi=shuf(GF_IDENTIFY),ps=shuf(GF_SORT),pc=shuf(GF_COMPLETE);
+    let ii=0,si=0,ci=0;
+    types.forEach(t=>{
+      if(t===0)q.push({type:'identify',data:pi[ii++%pi.length]});
+      else if(t===1)q.push({type:'sort',data:ps[si++%ps.length]});
+      else q.push({type:'complete',data:pc[ci++%pc.length]});
     });
     return q;
   }
@@ -1052,82 +1088,39 @@ function setupGreenFlags(){
   function renderRound(rnd){
     const area=$('gf-game-area');area.innerHTML='';
     const card=document.createElement('div');card.className='gf-round-card';
-
-    const typeLabels={identify:'Identify',sort:'Green or Red?',complete:'Complete the statement',rank:'Rank these'};
-    const typeClass={identify:'type-identify',sort:'type-sort',complete:'type-complete',rank:'type-rank'};
+    const typeLabels={identify:'Green Flag or Red Flag?',sort:'Sort this behavior',complete:'Complete the statement'};
+    const typeClass={identify:'type-identify',sort:'type-sort',complete:'type-complete'};
     const meta=document.createElement('div');meta.className='gf-round-meta';
-    meta.innerHTML=`<span class="gf-round-type ${typeClass[rnd.type]}">${typeLabels[rnd.type]}</span>
-      ${combo>1?`<span class="gf-combo-badge">🔥 ${combo}x Combo!</span>`:''}`;
+    meta.innerHTML=`<span class="gf-round-type ${typeClass[rnd.type]}">${typeLabels[rnd.type]}</span>${combo>1?`<span class="gf-combo-badge">🔥 ${combo}x Combo!</span>`:''}`;
     card.appendChild(meta);
-
-    if(rnd.type==='identify'){
-      const sc=document.createElement('div');sc.className='gf-scenario';sc.textContent='"'+rnd.data.text+'"';card.appendChild(sc);
+    const sc=document.createElement('div');sc.className='gf-scenario';
+    if(rnd.type==='complete'){sc.textContent=rnd.data.stem;}
+    else{sc.textContent='"'+rnd.data.text+'"';}
+    card.appendChild(sc);
+    if(rnd.type==='identify'||rnd.type==='sort'){
+      const isIdentify=rnd.type==='identify';
       const ch=document.createElement('div');ch.className='gf-choices grid2';
-      [{label:'🌿 Green Flag',val:'green'},{label:'🚩 Red Flag',val:'red'}].forEach(o=>{
+      const correctVal=isIdentify?rnd.data.correct:rnd.data.greenFlag;
+      const opts=isIdentify?
+        [{label:'🌿 Green Flag',val:'green'},{label:'🚩 Red Flag',val:'red'}]:
+        [{label:'🌿 Green Flag',val:true},{label:'🚩 Red Flag',val:false}];
+      const correctIdx=correctVal===opts[0].val?0:1;
+      const explanation=isIdentify?rnd.data.explanation:rnd.data.why;
+      opts.forEach(o=>{
         const b=document.createElement('button');b.className='gf-opt';b.textContent=o.label;
-        b.addEventListener('click',()=>handleAnswer(o.val==='green'===rnd.data.correct==='green','identify',rnd.data.explanation,b,ch.querySelectorAll('.gf-opt'),rnd.data.correct==='green'?0:1));
+        b.addEventListener('click',()=>handleAnswer(o.val===correctVal,rnd.type,explanation,b,ch.querySelectorAll('.gf-opt'),correctIdx));
         ch.appendChild(b);
       });
       card.appendChild(ch);
-    } else if(rnd.type==='sort'){
-      const sc=document.createElement('div');sc.className='gf-scenario';sc.textContent='"'+rnd.data.text+'"';card.appendChild(sc);
-      const ch=document.createElement('div');ch.className='gf-choices grid2';
-      [{label:'🌿 Green Flag',val:true},{label:'🚩 Red Flag',val:false}].forEach(o=>{
-        const b=document.createElement('button');b.className='gf-opt';b.textContent=o.label;
-        b.addEventListener('click',()=>{
-          const correct=o.val===rnd.data.greenFlag;
-          handleAnswer(correct,'sort',rnd.data.why,b,ch.querySelectorAll('.gf-opt'),rnd.data.greenFlag?0:1);
-        });
-        ch.appendChild(b);
-      });
-      card.appendChild(ch);
-    } else if(rnd.type==='complete'){
-      const sc=document.createElement('div');sc.className='gf-scenario';sc.textContent=rnd.data.stem;card.appendChild(sc);
+    } else {
       const ch=document.createElement('div');ch.className='gf-choices';
       rnd.data.options.forEach((opt,i)=>{
         const b=document.createElement('button');b.className='gf-opt';b.textContent=opt;
-        b.addEventListener('click',()=>{
-          handleAnswer(i===rnd.data.correct,'complete','',b,ch.querySelectorAll('.gf-opt'),rnd.data.correct);
-        });
+        b.addEventListener('click',()=>handleAnswer(i===rnd.data.correct,'complete','',b,ch.querySelectorAll('.gf-opt'),rnd.data.correct));
         ch.appendChild(b);
       });
       card.appendChild(ch);
-    } else if(rnd.type==='rank'){
-      const sc=document.createElement('div');sc.className='gf-scenario';sc.textContent='Drag to rank from most to least important: '+rnd.data.hint;card.appendChild(sc);
-      const items=[...rnd.data.items];let dragSrc=null;
-      const rl=document.createElement('div');rl.className='gf-rank-list';
-      items.forEach((item,i)=>{
-        const ri=document.createElement('div');ri.className='gf-rank-item';ri.dataset.idx=i;ri.draggable=true;
-        ri.innerHTML=`<span class="gf-rank-handle">⣿</span>${item}`;
-        ri.addEventListener('dragstart',()=>{dragSrc=ri;ri.classList.add('dragging');});
-        ri.addEventListener('dragend',()=>ri.classList.remove('dragging'));
-        ri.addEventListener('dragover',e=>{e.preventDefault();ri.classList.add('drag-over');});
-        ri.addEventListener('dragleave',()=>ri.classList.remove('drag-over'));
-        ri.addEventListener('drop',e=>{e.preventDefault();ri.classList.remove('drag-over');if(dragSrc&&dragSrc!==ri){const all=[...rl.querySelectorAll('.gf-rank-item')];const si=all.indexOf(dragSrc),di=all.indexOf(ri);if(si<di)rl.insertBefore(dragSrc,ri.nextSibling);else rl.insertBefore(dragSrc,ri);}});
-        // Touch drag support
-        let touchStartY=0;
-        ri.addEventListener('touchstart',e=>{touchStartY=e.touches[0].clientY;dragSrc=ri;},{passive:true});
-        ri.addEventListener('touchmove',e=>{
-          e.preventDefault();const y=e.touches[0].clientY;
-          const all=[...rl.querySelectorAll('.gf-rank-item')];
-          const target=all.find(el=>{const r=el.getBoundingClientRect();return y>=r.top&&y<=r.bottom&&el!==dragSrc;});
-          if(target){const si=all.indexOf(dragSrc),di=all.indexOf(target);if(si<di)rl.insertBefore(dragSrc,target.nextSibling);else rl.insertBefore(dragSrc,target);}
-        },{passive:false});
-        rl.appendChild(ri);
-      });
-      card.appendChild(rl);
-      const sub=document.createElement('button');sub.className='gf-rank-submit';sub.textContent='✓ Submit Ranking';
-      sub.addEventListener('click',()=>{
-        const order=[...rl.querySelectorAll('.gf-rank-item')].map(el=>+el.dataset.idx);
-        const correct=rnd.data.correct;
-        const matches=order.filter((v,i)=>v===correct[i]).length;
-        const isCorrect=matches>=Math.ceil(correct.length*.75);
-        sub.disabled=true;
-        handleAnswer(isCorrect,'rank',`Top pick should be: ${rnd.data.items[correct[0]]}`,sub,null,null);
-      });
-      card.appendChild(sub);
     }
-
     const fb=document.createElement('div');fb.className='gf-feedback';card.appendChild(fb);
     area.appendChild(card);
   }
@@ -1196,14 +1189,16 @@ function setupEnvelopes(){
 // ── CAROUSEL ──────────────────────────────────────────────────────────────────
 function setupCarousel(){
   const track=$('carousel-track'),pauseBtn=$('carousel-pause-btn');
-  const COUNT=12,R=200,SPEED=0.012;
+  const COUNT=12,SPEED=0.012;
   let angle=0,paused=false,last=null;
+  const getR=()=>Math.min(200,window.innerWidth*0.28);
   const items=PHOTOS.map((p,i)=>{
     const el=document.createElement('div');el.className='carousel-item';
     el.innerHTML=`<img src="${p.src}" alt="Memory ${i+1}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ci-placeholder" style="display:none"><span>📸</span><span style="font-size:.55rem;letter-spacing:.06em">${p.label}</span></div>`;
     el.addEventListener('click',()=>openLightbox(i));track.appendChild(el);return el;
   });
   function pos(){
+    const R=getR();
     items.forEach((el,i)=>{
       const theta=(angle+i*(360/COUNT))*Math.PI/180;
       const x=Math.cos(theta)*R,y=Math.sin(theta)*R;
